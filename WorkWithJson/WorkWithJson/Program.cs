@@ -102,7 +102,7 @@ class foo
 
         JsonSerializer serializer = new JsonSerializer();
 
-        using (StreamWriter sw = new StreamWriter(@"c:\json.txt"))
+        using (StreamWriter sw = new StreamWriter(@"c:\json.json"))
         using (JsonWriter writer = new JsonTextWriter(sw))
         {
             serializer.Serialize(writer, newJson);
@@ -112,7 +112,7 @@ class foo
 
 
         NewJson finalResult;
-        using (StreamReader file = File.OpenText(@"c:\json.txt"))
+        using (StreamReader file = File.OpenText(@"c:\json.json"))
         {
             finalResult = (NewJson)serializer.Deserialize(file, typeof(NewJson));
         }
