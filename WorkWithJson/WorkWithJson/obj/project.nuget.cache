@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "BpiRH8Tz8Yo9ARRdLYQdY77THmmDFgHcLokGH+WtXFmFK2I+OfDgVTLVIQLv1K9mtTX6Lqiv115XO2R8MqSDfA==",
+  "success": true,
+  "projectFilePath": "D:\\projects2\\projects\\WorkWithJson\\WorkWithJson\\WorkWithJson.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\viplo\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

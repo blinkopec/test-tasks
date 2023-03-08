@@ -1,0 +1,221 @@
+.vote_widget .selectSmallAct .arrow {opacity: 1}
+.vote_widget .selectSmallAct .dot {
+    background: url("/images/movies/select.gif") repeat scroll -270px -107px transparent;
+    height: 7px;
+    overflow: hidden;
+    position: absolute;
+    right: -13px;
+    top: 8px;
+    width: 7px;
+}
+.vote_widget .star {
+    background: url("/images/movies/select.gif") repeat scroll -268px -197px transparent;
+    cursor: pointer;
+    height: 23px;
+    overflow: hidden;
+    position: absolute;
+    right: 32px;
+    top: 7px;
+    width: 25px;
+}
+.vote_widget .star:hover {
+    background-position: -242px -197px;
+}
+.vote_widget .starAct {
+    background-position: -242px -197px;
+}
+.vote_widget .rateNow {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: 1px 1px 2px;
+    padding: 21px 0 9px;
+    position: absolute;
+    width: 127px;
+    z-index: 5;
+    margin-top: -2px
+}
+.vote_widget .rateNow .rateNowItem {
+    cursor: pointer;
+    height: 13px;
+    overflow: hidden;
+    padding: 7px 30px 0 19px;
+    position: relative;
+}
+.vote_widget .rateNow .rateNowItem:hover {
+    background: none repeat scroll 0 0 #E5E5E5;
+}
+.vote_widget .rateNow .rateNowItemAct {
+    background: none repeat scroll 0 0 #E5E5E5;
+}
+.vote_widget .rateNow .stars {
+    background: url("/images/starsSmallList.png") repeat scroll 0 0 transparent;
+    height: 6px;
+    overflow: hidden;
+    width: 70px;
+}
+.vote_widget .rateNow .stars10 {
+    background-position: 0 0;
+}
+.vote_widget .rateNow .stars9 {
+    background-position: 0 -7px;
+}
+.vote_widget .rateNow .stars8 {
+    background-position: 0 -14px;
+}
+.vote_widget .rateNow .stars7 {
+    background-position: 0 -21px;
+}
+.vote_widget .rateNow .stars6 {
+    background-position: 0 -28px;
+}
+.vote_widget .rateNow .stars5 {
+    background-position: 0 -35px;
+}
+.vote_widget .rateNow .stars4 {
+    background-position: 0 -42px;
+}
+.vote_widget .rateNow .stars3 {
+    background-position: 0 -49px;
+}
+.vote_widget .rateNow .stars2 {
+    background-position: 0 -56px;
+}
+.vote_widget .rateNow .stars1 {
+    background-position: 0 -63px;
+}
+.vote_widget .rateNow .voteNum {
+    color: #555555;
+    font-family: arial;
+    position: absolute;
+    right: 6px;
+    text-align: center;
+    top: 3px;
+    width: 24px;
+}
+.vote_widget .rateNow .rateNowItemAct .voteNum {
+    color: #333333;
+    font-weight: bold;
+}
+.vote_widget .rateNow .rateNowArrow {
+    background: url("/images/movies/select.gif") repeat scroll -294px -197px transparent;
+    height: 27px;
+    left: -14px;
+    position: absolute;
+    top: -1px;
+    width: 14px;
+}
+.vote_widget .rateNow .seen {
+    height: 17px;
+    padding: 3px 0 0 19px;
+}
+.vote_widget .rateNow .seen .text {
+    color: #555555;
+    font-family: arial;
+    font-weight: bold;
+}
+.vote_widget .rateNow .seen .eye {
+    background: url("/images/icons/eyeSmall.gif") repeat scroll 0 0 transparent;
+    height: 9px;
+    overflow: hidden;
+    position: absolute;
+    right: 13px;
+    top: 6px;
+    width: 10px;
+}
+.vote_widget .myVote {
+    background: none repeat scroll 0 0 #FF6600;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 12px;
+    height: 19px;
+    overflow: hidden;
+    padding-top: 4px;
+    position: absolute;
+    right: 32px;
+    text-align: center;top: 7px;
+    width: 25px;
+}
+.vote_widget .bigEye {
+    background: url("/images/movies/select.gif") repeat scroll -309px -197px transparent;
+    cursor: pointer;
+    height: 23px;
+    overflow: hidden;
+    position: absolute;
+    right: 32px;top: 7px;
+    width: 25px;
+}
+
+.item {position:relative;}
+
+
+.MyKP_Folder_Select .select .list_title,
+.MyKP_Folder_Select .select .list {left:auto; right:0 !important; }
+.seen_disabled {color:#999 !important; cursor:default !important; background: none !important; }
+.seen .text{color:#999 !important; font-weight:normal !important;letter-spacing:0.9px;}
+.rateNowItemAct .text{color: #333 !important; font-weight:bold !important; letter-spacing: 0.5px;}
+.seen_disabled .text{font-weight:normal !important; color:#999 !important; letter-spacing:1px;}
+
+.vote_widget .MyKP_Folder_Select {
+    right: 0;
+    margin-top: 7px;
+    width: 25px !important;
+}
+.vote_widget .MyKP_Folder_Select .select {
+    margin-left: 0;
+}
+.vote_widget .MyKP_Folder_Select .title {
+    background: url("/images/movies/select.gif") repeat scroll -216px -197px transparent !important;
+    border: medium none !important;
+    cursor: pointer;
+    display: block;
+    height: 23px !important;
+    opacity: 0.5;
+	filter: alpha(opacity=50);
+    padding: 0 !important;
+    width: 25px !important;
+}
+.vote_widget .MyKP_Folder_Select_added .MyKP_Folder_Select_dot {
+    background: url("/images/movies/select.gif") repeat scroll -270px -107px transparent;
+    height: 7px;
+    margin: 0;
+    overflow: hidden;
+    position: absolute;
+    right: -13px;
+    top: 8px;
+    width: 7px;
+}
+.vote_widget .MyKP_Folder_Select_added .title {
+    opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+.vote_widget .rating {
+    text-align: right;
+}
+.vote_widget .MyKP_Folder_Select .title:hover {
+    opacity: 1;
+	filter: alpha(opacity=100);
+}
+.vote_widget .selectSmallAct .arrow {
+    opacity: 1;
+	filter: alpha(opacity=100);
+}
+.vote_widget .selectSmallAct .dot {
+    background: url("/images/movies/select.gif") repeat scroll -270px -107px transparent;
+    height: 7px;
+    overflow: hidden;
+    position: absolute;
+    right: -13px;
+    top: 8px;
+    width: 7px;
+}
+.myVote, .star, .bigEye {float: left; position: static !important; top: auto !important; right: auto !important; margin: 5px 7px 0 0 !important}
+.rateNow {top: 7px !important; right: 32px !important}
+.rateNowItem .text {text-align: left; padding-left: 4px}
+.MyKP_Folder_Select {text-align: left; float: left; position: relative !important; margin: 5px 0 0 0 !important}
+.MyKP_Folder_Select .act{text-decoration: none !important;}

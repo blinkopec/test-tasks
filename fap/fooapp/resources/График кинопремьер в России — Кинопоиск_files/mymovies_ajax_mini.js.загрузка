@@ -1,0 +1,566 @@
+var HOST = '';
+noHTMLchange = false;
+Folders = {
+    LockTimer :false,
+    LockTimeOut :false,
+    settings: {},
+    result: {},
+    DeleteFolders: null,
+    FirstTime: {"film":[],"stars":[]}, //
+    Objects: {"film":[],"stars":[]}, //
+    FolderSelectTitles: {"film":[],"stars":[]}, //
+    TotalFolderNum: {"film":0,"stars":0}, //
+    init: function(){
+        Folders.settings={};
+        Folders.settings.film={};
+        Folders.settings.stars={};
+        Folders.settings.film.handler = 'mustsee';
+        Folders.settings.film.name = 'film';
+        Folders.settings.film.id_name = 'id_film';
+        Folders.settings.film.liid = 'film_';
+        Folders.settings.film.id_names = 'id_films';
+        Folders.settings.film.rus = 'Мои фильмы';
+        Folders.settings.stars.handler = 'stars';
+        Folders.settings.stars.name = 'actor';
+        Folders.settings.stars.liid = 'people_';
+        Folders.settings.stars.id_name = 'id_actor';
+        Folders.settings.stars.id_names = 'id_actors';
+        Folders.settings.stars.rus = 'Мои звёзды';
+
+        $('.MyKP_Folder_Select, .MyKP_Folder_Select_Single:not(.already_inited)').each(function(){
+            Folders.initItem($(this));
+        });
+    },
+
+    initItem: function(item){
+        if(item.attr('type')){
+            ObjType = item.attr('type'); // film | stars
+        } else{
+            ObjType = item.attr('data'); // film | stars
+        }
+        if (item.hasClass('recountfolders')) {
+            Folders.settings[ObjType].ReCountFolders = true;
+        }
+        if (item.hasClass('shortselect')) {
+            Folders.settings[ObjType].ShortTemplate = true;
+        }
+        if (item.hasClass('shortestselect')) {
+            Folders.settings[ObjType].ShortestTemplate = true;
+        }
+        if (item.hasClass('FolderReferer')) {
+            Folders.settings[ObjType].FolderReferer = item.attr('alt');
+        }
+        if (item.hasClass('MyKP_Folder_Select_Single')) {
+            Folders.settings[ObjType].mode =  "single";
+        } else {
+            Folders.settings[ObjType].mode =  "multiple";
+        }
+        if (item.hasClass('noDot')) {
+            Folders.settings[ObjType].noDot = true;
+        }
+
+        Folders.settings[ObjType].mode = Folders.settings[ObjType].mode == "single" ? (item.attr('data-tmpl') ? item.attr('data-tmpl') : "single") : Folders.settings[ObjType].mode;
+
+        item.attr({'alt': ''});
+        item.addClass('already_inited');
+        var id = item.attr('mid');
+        if (!id) {
+            id = item.attr('pid');
+        }
+        if (!id) {
+            id = item.attr('id').replace('MyKP_Folder_', '');
+        }
+
+        Folders.Objects[ObjType][Folders.Objects[ObjType].length] = id;
+        clearTimeout(Folders.LockTimeOut);
+        Folders.LockTimeOut = setTimeout(function(){
+            if (typeof(callback) != 'function') {
+                callback = function(){};
+            }
+            Folders.InitFoldersData(callback);
+        }, 200);
+    },
+
+    FetchData: function(response, callback){
+        Folders.result=response;
+        for(var type in response){
+            var result=response[type];
+            for (var obj_n in Folders.Objects[type]) {
+                var html = '';
+                var obj_id = Folders.Objects[type][obj_n];
+                var name = $('.MyKP_Folder_'+obj_id).attr('name');
+                if (!name)
+                    name = 'Мои фильмы';
+
+                Folders.FolderSelectTitles[type][obj_id] = name;
+
+                if (Folders.settings[type].mode == 'single') {
+                    var ac = result.objFolders&&result.objFolders[obj_id] ? ' block_added' : '';
+
+                    html += '<div class="block_add'+ac+'">'+
+                       '<div class="status"></div>'+
+                       (type == 'film' ? '<div class="info"><a href="#" onclick="help_my_movies(); return false"></a></div>' : '')+
+                       '<span class="header">Добавить в</span>';
+                }
+
+                // тут папки
+                var fol_num = '';
+                if (result.objFolders&&result.objFolders[obj_id]) {
+                    var fol_num = 0;
+                    for (var a in result.objFolders[obj_id]) {
+                        fol_num++;
+                    }
+                }
+                if ((Folders.settings[type].ShortTemplate || Folders.settings[type].ShortestTemplate) && result.objFolders && result.objFolders[obj_id]) {
+                    $('.MyKP_Folder_'+obj_id).addClass('MyKP_Folder_Select_added');
+                }
+
+
+                if (Folders.settings[type].mode == 'extended') {
+
+                    html += '<div class="block_add extended">';
+                    var first_folder = false;
+
+                    for(var folder_id in result.folders)
+                    {
+                        if(first_folder) continue;
+                        first_folder = result.folders[folder_id];
+                        var cl=' button_'+result.folders[folder_id].id;
+                        if(result.objFolders&&result.objFolders[obj_id]&&result.objFolders[obj_id][result.folders[folder_id].id]) cl+=' active';
+                    }
+                    //if(first_folder.name.length > 15)
+                    //    first_folder.name = first_folder.name.substr(0,15);
+                      html += '<div class="select folders_select_'+obj_id+'" fid="select_'+obj_id+'" title="добавить в '+Folders.settings[type]['rus'] +'">'+
+                        '<span class="button '+cl+'"  onclick="Folders.FavFolderClick(\''+type+'\','+obj_id+','+first_folder.id+')"><div class="icon"></div><b>'+first_folder.name+'</b></span><span class="title '+cl+' no_text" onclick="Folders.ClickFolders(this)"><div class="icon"></div></span>'+
+                        '<div class="list_div"></div></div>';
+
+                } else {
+                    html += '<div class="select" fid="select_'+obj_id+'" title="добавить в '+Folders.settings[type].rus+'">'+
+                    '<span class="title" onclick="Folders.ClickFolders(this)">'+(Folders.settings[type].ShortestTemplate ? "" : Folders.FolderSelectTitles[type][obj_id]+' <b>'+(fol_num > 0 ? "("+fol_num+")" : ''))+'</b></span>'+
+                    '<div class="list_div"></div></div>';
+                }
+
+                if (Folders.settings[type].mode == 'single') {
+                    html_f=new Array();
+                    for(var folder_id in result.folders)
+                    {
+                        if(result.objFolders&&result.objFolders[obj_id]&&result.objFolders[obj_id][result.folders[folder_id].id]) var cl='';
+                        else  var cl='class="noact_s"';
+
+                        if(type=='stars')
+                            html_f[html_f.length] = '<li '+cl+' id="ms_folder_'+result.folders[folder_id].id+'"><a href="/level/78/stars/list/type/'+result.folders[folder_id].id+'/people/'+obj_id+'/">'+result.folders[folder_id].name+'</a><s>,</s></li>';
+                        if(type=='film')
+                            html_f[html_f.length] = '<li '+cl+' id="ms_folder_'+result.folders[folder_id].id+'"><a href="/level/78/movies/list/type/'+result.folders[folder_id].id+'/film/'+obj_id+'/">'+result.folders[folder_id].name+'</a><s>,</s></li>';
+                    }
+                    var li=html_f.join(" ");
+
+                    html+='<ul class="folders">'+li+'</ul>';
+                    if(result.all_view)    html+='<div class="all"><a href="'+result.all_view+'">все папки ('+result.count_folders+')</a></div>';
+                    html+='</div>';
+                }
+
+                if (Folders.settings[type].mode == 'extended') {
+                    html_f=new Array();
+                    for (var folder_id in result.folders) {
+                        if (result.objFolders&&result.objFolders[obj_id]&&result.objFolders[obj_id][result.folders[folder_id].id])
+                            var cl = '';
+                        else
+                            var cl = 'class="noact_s"';
+
+                        if(type=='stars')
+                            html_f[html_f.length] = '<li '+cl+' id="ms_folder_'+result.folders[folder_id].id+'"><a href="/level/78/stars/list/type/'+result.folders[folder_id].id+'/people/'+obj_id+'/">'+result.folders[folder_id].name+'</a><s>,</s></li>';
+                        if(type=='film')
+                            html_f[html_f.length] = '<li '+cl+' id="ms_folder_'+result.folders[folder_id].id+'"><a href="/level/78/movies/list/type/'+result.folders[folder_id].id+'/film/'+obj_id+'/">'+result.folders[folder_id].name+'</a><s>,</s></li>';
+                    }
+                    var li=html_f.join(" ");
+
+                    html+='<ul class="folders">'+li+'</ul>';
+
+                    if (result.all_view)
+                        html+='<div class="allFolders"><div class="dot"></div><div class="text"><a href="'+result.all_view+'">все папки</a> ('+result.count_folders+')</div>'+(type == 'film' ? '<div class="info" onclick="help_my_movies(); return false"></div>' : '')+'</div>';
+                }
+
+                if (Folders.settings[type].ShortTemplate && !Folders.settings[type].noDot) {
+                    html += "<div class='MyKP_Folder_Select_dot'></div>";
+                }
+                if (Folders.settings[type].ShortestTemplate && !Folders.settings[type].noDot) {
+                    html += "<div class='MyKP_Folder_Select_dot'></div>";
+                }
+
+                if (!noHTMLchange) {
+                    // $('.MyKP_Folder_'+obj_id + (type != 'stars' ? ':not(.MyKP_Folder_actor_'+obj_id +')' : "")).html(html); // слишком тормозит
+                    $('.MyKP_Folder_'+obj_id).html(html);
+                }
+            }
+            Folders.RefreshComma();
+            if (typeof callback == 'function') {
+                callback();
+            }
+        }
+    },
+
+    InitFoldersData: function(callback){
+        if(typeof(myMoviesData)!='undefined') {
+            Folders.FetchData(myMoviesData, callback);
+        } else {
+            if (Folders.Objects.length == 0) {
+                return;
+            }
+
+            var req_url = HOST
+                + '/handler_folders_ajax.php?' // mustsee | stars
+                + '&rnd='+Math.round(Math.random()*100000000);
+            var post={
+                objects : Folders.Objects,
+                mode_film:Folders.settings['film'].mode == "multiple" ? "multiple" : "single",
+                mode_stars:Folders.settings['stars'].mode== "multiple" ? "multiple" : "single"
+            };
+
+            $.post(req_url, post, function(response){
+                Folders.FetchData(response, callback);
+            },"json");
+        }
+    },
+
+    ClickFolders: function(obj, hide_init){
+        if (typeof(hide_init) == 'undefined') {
+            hide_init = false;
+        }
+
+        var selid=$(obj).parents('.select').attr('fid');
+        if($(obj).parents('.MyKP_Folder_Select, .MyKP_Folder_Select_Single').attr('type')){
+            var type=$(obj).parents('.MyKP_Folder_Select, .MyKP_Folder_Select_Single').attr('type');
+        } else{
+            var type=$(obj).parents('.MyKP_Folder_Select, .MyKP_Folder_Select_Single').attr('data');
+        }
+        Folders.HideItemsOnDelete();
+        if (selid && selid.indexOf('select_') > -1) {
+            $('.list_div').css({"display":"none"});
+            var id=selid.replace('select_','');
+
+            obj = $(obj).parents('.select').find('.list_div');
+
+            if (typeof(Folders.FirstTime[type][id])=="undefined") {
+                Folders.InitFolders(id,type);
+                Folders.InitFoldersMoves(id,type);
+                Folders.FirstTime[type][id]=true;
+            }
+
+            if (hide_init) {
+                return;
+            }
+
+            Folders.LockTimer=true;
+            clearTimeout(Folders.LockTimeOut);
+            Folders.LockTimeOut=setTimeout(function(){ Folders.LockTimer=false; },100);
+            obj.css({"display":"block"});
+
+            for (var a in Folders.result[type].folders) {
+                Folders.TotalFolderNum[type]++;
+            }
+
+            if (Folders.TotalFolderNum[type] > 15)
+                obj.css({"display":"block"});
+            else
+                obj.show("fast");
+        }
+    },
+
+    FavFolderClick: function(type, obj_id, id){
+        $('.button_' + id).addClass('loading');
+        if (typeof(Folders.FirstTime[type][obj_id]) == "undefined") {
+            Folders.ClickFolders($('.folders_select_'+obj_id+' span.title'), true);
+        }
+        setTimeout(function(){
+            $('.folders_select_'+obj_id+' dl.list dd[value="'+id+'"]').click();
+        }, 500);
+    },
+
+    InitFolders: function(obj_id, type){
+        result=Folders.result[type];
+        var list_adds=false,list_title_adds=false,arrow_adds=false;
+
+        var fol_num=0;
+        for (var a in result.objFolders[obj_id]) {
+            fol_num++;
+        }
+
+        var TotalFolderNum=0;
+        for (var a in result.folders) {
+            TotalFolderNum++;
+        }
+
+        if (TotalFolderNum > 15) {
+            var list_adds="style='width: 230px; height: 302px; overflow-y: scroll; overflow-x: hidden; border-right:solid 1px #999;'";
+            var list_title_adds="style='width: 224px; background-position: -216px -128px'";
+        }
+
+        html='<div class="list_title" '+list_title_adds+'>'+Folders.FolderSelectTitles[type][obj_id]+' <b>'+(fol_num>0?"("+fol_num+")":"")+'</b></div>';
+
+        html+='<dl class="list" '+list_adds+'>';
+        for (var folder_id in result.folders) {
+            var cl='';
+            if(result.objFolders&&result.objFolders[obj_id]&&result.objFolders[obj_id][result.folders[folder_id].id]) var cl='slc';
+
+            if (type=='stars')
+                html+='<dd class="'+cl+' '+result.folders[folder_id].icon+'" value="'+result.folders[folder_id].id+'"><s></s> '+result.folders[folder_id].name+'<a class="arrow" '+arrow_adds+' href="/level/78/stars/list/type/'+result.folders[folder_id].id+'/people/'+obj_id+'/"></a></dd>';
+
+            if (type == 'film') {
+                html += ''+
+                    '<dd class="'+cl+' '+result.folders[folder_id].icon+(result.folders[folder_id].id == 6 ? ' fav' : '')+(result.folders[folder_id].id == 6 && result.folders[folder_id].icon == 'private-folder' ? ' favGray' : '')+'" value="'+result.folders[folder_id].id+'">'+
+                        '<s></s> '+
+                        result.folders[folder_id].name+
+                        '<a class="arrow" '+arrow_adds+' href="/level/78/movies/list/type/'+result.folders[folder_id].id+'/film/'+obj_id+'/"></a>'+
+                    '</dd>';
+            }
+        }
+        html+='</dl>';
+
+        if(!noHTMLchange)
+            $('.MyKP_Folder_'+obj_id+' .list_div').html(html);
+    },
+
+    InitFoldersMoves: function(object_id,type)
+    {
+        $('.MyKP_Folder_'+object_id+' .list dd').mouseover(function(){
+            $('.MyKP_Folder_'+object_id+' .list dd.act_slc').removeClass('act_slc').addClass('slc');
+            if($(this).hasClass('slc')){
+                $(this).addClass('act_slc');
+                $(this).removeClass('slc')
+            } else
+                $(this).addClass('act');
+        });
+
+        $('.MyKP_Folder_'+object_id+' .list dd').mouseout(function(){
+            if($(this).hasClass('act_slc')){
+                $(this).addClass('slc');
+                $(this).removeClass('act');
+                $(this).removeClass('act_slc');
+                }
+            else
+                $(this).removeClass('act');
+        });
+
+        $('.MyKP_Folder_'+object_id+' .select dd').click(function(){
+            Folders.LockTimer=true;
+            clearTimeout(Folders.LockTimeOut);
+            Folders.LockTimeOut=setTimeout(function(){ Folders.LockTimer=false; },500);
+            $('.list_title').append("<span class='list_title_loading'></span>");
+
+            var value=$(this).attr('value');
+            var obj=this;
+            obj_id=object_id;
+            if ($(obj).hasClass('act_slc') || $(obj).hasClass('slc')) {
+                // удаление
+                $.getJSON(HOST + '/handler_folders_ajax.php?action=delete&mode=del_' + Folders.settings[type]['name'] + '&' + Folders.settings[type]['id_name'] + '=' + obj_id + (Folders.settings[type].ReCountFolders ? "&recount=1" : "") + '&rnd=' + Math.round(Math.random() * 100000000) + '&from_folder=' + value, function (res) {
+                    // кнопка-сердечко "Любимый фильм"
+                    $('.button_' + value).removeClass('loading');
+
+                    if (value == 6) {
+                        var new_title = $('#btn_fav_film').hasClass('el_1_act') ? 'Добавить в любимые фильмы' : 'Удалить из любимых фильмов';
+                        $('#btn_fav_film').toggleClass('el_1_act').attr({'title': new_title});
+                    }
+
+                    $(obj).removeClass('act_slc');
+                    $(obj).removeClass('slc');
+
+                    $(".MyKP_Folder_"+obj_id+" .list dd[value="+value+"]").removeClass('slc');
+                    $('#ms_folder_'+value).addClass('noact_s');
+                    if(Folders.settings[type].FolderReferer&&value==Folders.settings[type].FolderReferer)
+                        Folders.DeleteFolders = '#'+Folders.settings[type]['liid']+obj_id;
+
+                    var l=$(obj).parents('.select').find('.slc,.act_slc').length;
+                    var a='';
+                    if (l>0)
+                        a=' <b>('+l+')</b>';
+                    else
+                        if (Folders.settings[type].ShortTemplate || Folders.settings[type].ShortestTemplate)
+                            $('.MyKP_Folder_'+obj_id).removeClass('MyKP_Folder_Select_added');
+                    if (!Folders.settings[type].ShortestTemplate) {
+                        $(obj).parents('.select').find('.title:not(.no_text)').html(Folders.FolderSelectTitles[type][obj_id]+a);
+                    }
+                    $(obj).parents('.select').find('.list_title').html(Folders.FolderSelectTitles[type][obj_id]+a);
+
+                    $('.button_' + value).removeClass('active');
+
+
+                    if (res.count_folders&&res.all_view)
+                        $(".block_add .all").html('<a href="'+res.all_view+'">все папки ('+res.count_folders+')</a>');
+                    else
+                        $(".block_add .all").html('');
+
+                    if (res.count_folders&&res.all_view)
+                        $(".allFolders .text").html('<a href="'+res.all_view+'">все папки</a> ('+res.count_folders+')');
+                    else
+                        $(".allFolders .text").html('');
+
+                    if (res.recount)
+                        $('li#folder_'+value+' b').html(res.recount);
+
+                    Folders.RefreshComma();
+                }).fail(function (xhr, status, error) {
+                    return $.app.onHandlerXhrFail(xhr, status, error, function () {
+                        $('.button_' + value).removeClass('loading');
+                    });
+                });
+
+            } else {
+                // добавление
+                $.getJSON(HOST + '/handler_folders_ajax.php?action=add&mode=add_' + Folders.settings[type]['name'] + '&' + Folders.settings[type]['id_name'] + '=' + obj_id + (Folders.settings[type].ReCountFolders ? "&recount=1" : "") + '&rnd=' + Math.round(Math.random() * 100000000) + '&to_folder=' + value, function (res) {
+                    $('.button_' + value).removeClass('loading');
+                    if (res && res.result=='ok') {
+                        $.app.authorityAction('FOLDER');
+
+                        $(obj).addClass('act_slc');
+                        $(".MyKP_Folder_"+obj_id+" .list dd[value="+value+"]").addClass('slc');
+                        $('#ms_folder_'+value).parents('.block_add').addClass('block_added');
+                        if(Folders.settings[type].ShortTemplate || Folders.settings[type].ShortestTemplate ) $('.MyKP_Folder_'+obj_id).addClass('MyKP_Folder_Select_added');
+
+                        $('#ms_folder_'+value).removeClass('noact_s');
+
+
+                        var l=$(obj).parents('.select').find('.slc,.act_slc').length;
+                        var a='';
+
+                        if(l>0) {a=' <b>('+l+')</b>';}
+
+                        if(!Folders.settings[type].ShortestTemplate)
+                        {
+                            $(obj).parents('.select').find('.title:not(.no_text)').html(Folders.FolderSelectTitles[type][obj_id]+a);
+                        }
+                        $(obj).parents('.select').find('.list_title').html(Folders.FolderSelectTitles[type][obj_id]+a);
+
+                        if(res.count_folders&&res.all_view)
+                            $(".block_add .all").html('<a href="'+res.all_view+'">все папки ('+res.count_folders+')</a>');
+                        else $(".block_add .all").html('');
+
+
+                        if(res.count_folders&&res.all_view)
+                            $(".allFolders .text").html('<a href="'+res.all_view+'">все папки</a> ('+res.count_folders+')');
+                        else $(".allFolders .text").html('');
+
+
+                        if(res.recount)
+                            $('li#folder_'+value+' b').html(res.recount);
+
+                        $('.button_' + value).addClass('active');
+                        Folders.RefreshComma();
+                    } else {
+                        if (res && res.result == 'impossible') {
+                            alert("Вы добавляете фильм в папку, в которой не могут находиться оцененные фильмы.<br /> Свойства папки можно изменить в разделе <a href='/level/78/movies/list/type/"+value+"/' class='all'>Мой Кинопоиск</a>.");
+                            $('.list_title_loading').remove();
+                        } else if (res && res.result == 'FILM_CANT_SET_LIKED') {
+                            alert('Фильм ещё не вышел в прокат.');
+                            $('.list_title_loading').remove();
+                        } else if (res && res.result == 'FOLDER_NOT_FOUND') {
+                            alert('Папка не существует. Сначала создайте её в разделе <a href="/level/78/movies/" class="all">Мой Кинопоиск</a>.');
+                            $('.list_title_loading').remove();
+                        } else {
+                            $.app.notice($.app.notices.authRequired, {'action':"использования сервиса &laquo;"+Folders.settings[type]['rus']+"&raquo;"});
+                            $('.list_title_loading').remove();
+                        }
+                    }
+                }).fail(function (xhr, status, error) {
+                    return $.app.onHandlerXhrFail(xhr, status, error, function () {
+                        $('.button_' + value).removeClass('loading');
+                    });
+                });
+            }
+        });
+
+        $('.MyKP_Folder_'+object_id+' .select .list_title').click(function(){
+            var selid = $(this).parents('.select').attr('fid');
+            if (selid && selid.indexOf('select_') > -1) {
+                var id = selid.replace('select_', '');
+                $(this).parents('.select').find('.list_div').hide("fast").css({"display":"none"});
+                Folders.HideItemsOnDelete();
+                clearTimeout(Folders.LockTimeOut);
+            }
+        });
+
+        $('.MyKP_Folder_'+object_id+' .select dd a').click(function(){
+            top.location = this.href;
+            return false;
+        });
+
+        $('body').click(function(){
+            if (!Folders.LockTimer) {
+                $(".list_div").hide('fast').css({"display":"none"});
+                Folders.HideItemsOnDelete();
+            }
+        });
+    },
+
+    HideItemsOnDelete: function(){
+        if (Folders.DeleteFolders) {
+            $(Folders.DeleteFolders).fadeOut();
+            Folders.DeleteFolders = null;
+        }
+        InitFlap();
+    },
+
+    RefreshComma: function(){
+        setTimeout(function(){
+            $('.block_add .folders li s').css({"display":"none"});
+            setTimeout(function(){
+                $('.block_add .folders li:not(.noact_s) s').show();
+                setTimeout(function(){
+                    $('.block_add .folders li:not(.noact_s)').filter(':last').find('s').css({"display":"none"});
+                    if($('.block_add .folders li:not(.noact_s)').length) {
+                        $('.block_add .folders').fadeIn();
+                    } else {
+                        $('.block_add .folders').fadeOut();
+                    }
+                }, 0);
+            }, 0);
+        }, 100);
+    }
+}
+
+$(Folders.init);
+
+var VotesLock = false;
+
+$(function(){
+    $('body').click(function(){
+        if(!VotesLock){
+            $(".rateNow").hide();
+        }
+    });
+});
+
+function DelMyFolderItem(type, obj_id, id_folder, force)
+{
+    // "Примечания"
+    if (!force) {
+        if (type == 'film' && id_folder == 142498 && !confirm('При удалении фильма из этой папки на его странице будет удалено примечание.')) {
+            return;
+        }
+        if (type == 'stars' && id_folder == 67338 && !confirm('При удалении человека из этой папки на его странице будет удалено примечание.')) {
+            return;
+        }
+    }
+
+    var url =
+        '/handler_'+Folders.settings[type]['handler']+'_ajax.php?'+
+        'mode=del_'+Folders.settings[type]['name']+'&'+
+        Folders.settings[type]['id_name']+'='+obj_id+'&'+
+        'recount=1&'+
+        'rnd='+Math.round(Math.random()*100000000)+'&'+
+        'from_folder='+id_folder;
+
+    $.getJSON(url, function(res){
+        if (res.recount) {
+            $('li#folder_'+id_folder+' b').html(res.recount);
+        }
+
+        $('#'+Folders.settings[type]['liid']+obj_id).animate({'opacity': 0}, 400, function(){
+            $(this).hide(0, function(){
+                if (!$('#itemList').find('.item:visible').length) {
+                    window.location.reload();
+                    return;
+                }
+            });
+        });
+    });
+}

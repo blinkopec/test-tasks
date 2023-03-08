@@ -1,0 +1,12 @@
+version: "1.2"
+services:
+  app1:
+    image: ${DOCKER_REGISTRY-}tz1
+    build:
+      context: .
+      dockerfile: WorkWithJson\WorkWithJson\Dockerfile
+  app2:
+    image: ${DOCKER_REGISTRY-}tz2
+    build:
+      context: .
+      dockerfile: ReqresAPI_GetInformation\ReqresAPI_GetInformation\Dockerfile

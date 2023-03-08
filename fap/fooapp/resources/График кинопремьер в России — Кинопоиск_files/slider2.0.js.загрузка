@@ -1,0 +1,177 @@
+
+	var Slider={
+		itemWidth:140,
+		scrollPerTime:140,
+		visibleWidth:555,
+		left:0,
+		itemNum:0,
+		width:0,
+	};
+	
+	function RecountSlider(){
+		Slider.itemNum=$('.wide .item:visible').length;
+		
+		Slider.width=Slider.itemNum * Slider.itemWidth;
+		
+		$('.wide').css({"width":Slider.width});
+		
+		
+		if(Slider.left>=0) {
+				$('.scroll-arrows .left').css({'opacity':0.1, 'cursor':'default'});
+			} else {
+				$('.scroll-arrows .left').css({'opacity':1, 'cursor':'pointer'});
+			}
+		if(Math.abs(Slider.left)>=Slider.width-Slider.visibleWidth-Slider.scrollPerTime/2) {
+				$('.scroll-arrows .right').css({'opacity':0.1, 'cursor':'default'});
+			} else {
+				$('.scroll-arrows .right').css({'opacity':1, 'cursor':'pointer'});
+			}
+		if(Slider.itemNum)
+			$('.scroll-arrows').css({'display':'block'});
+		else 
+			$('.scroll-arrows').css({'display':'none'});
+			
+			
+	}
+	
+	function ScrollTo(direction)
+	{
+		
+		if(direction=='left')
+		{
+			Slider.left=Slider.left+Slider.scrollPerTime;
+			$('.scroll-arrows .right').css({'opacity':1, 'cursor':'pointer'});
+			if(Slider.left>=0) {
+				Slider.left=0;
+				$('.scroll-arrows .left').css({'opacity':0.1, 'cursor':'default'});
+			} else {
+				$('.scroll-arrows .left').css({'opacity':1, 'cursor':'pointer'});
+			}
+			$('.wide').animate({"marginLeft":Slider.left});
+		}
+		
+		if(direction=='right') 
+		{
+			Slider.left=Slider.left-Slider.scrollPerTime;
+			$('.scroll-arrows .left').css({'opacity':1, 'cursor':'pointer'});
+			
+			if(Math.abs(Slider.left)>=Slider.width-Slider.visibleWidth-Slider.scrollPerTime/2) {
+				Slider.left=-1*(Slider.width-Slider.visibleWidth);
+				$('.scroll-arrows .right').css({'opacity':0.1, 'cursor':'default'});
+			} else {
+				$('.scroll-arrows .right').css({'opacity':1, 'cursor':'pointer'});
+			}
+			$('.wide').animate({"marginLeft":Slider.left});
+			//$( ".selector" ).slider( "option", "range", 'min' );
+		}
+		$( ".scroll-bar" ).slider("value",-20 * Slider.left/Slider.scrollPerTime );
+	}
+	
+	
+	function InitSlider(){
+		//scrollpane parts
+		var scrollPane = $( ".premierScroll" ),
+			scrollContent = $( ".wide" );
+		
+		//build slider
+		var scrollbar = $( ".scroll-bar" ).slider({
+			slide: function( event, ui ) {
+				if ( scrollContent.width() > scrollPane.width() ) {
+					var left=Math.round(
+						ui.value / 100 * ( scrollPane.width() - scrollContent.width() )
+					);
+					//left=left>-9?-9:left;
+					scrollContent.css( "margin-left",left + "px" );
+					Slider.left=Slider.scrollPerTime*Math.round(left/Slider.scrollPerTime);
+					
+				} else {
+					scrollContent.css( "margin-left", 0 );
+				}
+			},
+			stop: function(){
+				RecountSlider();
+			},
+			//step: 16.4,
+			animate: true
+		});
+		
+		//append icon to handle
+		var handleHelper = scrollbar.find( ".ui-slider-handle" )
+		.mousedown(function() {
+			scrollbar.width( handleHelper.width() );
+		})
+		.mouseup(function() {
+			scrollbar.width( "100%" );
+		})
+		.append( "<span class='ui-icon ui-icon-grip-dotted-vertical'></span>" )
+		.wrap( "<div class='ui-handle-helper-parent'></div>" ).parent();
+		
+		//change overflow to hidden now that slider handles the scrolling
+		scrollPane.css( "overflow", "hidden" );
+		
+		//size scrollbar and handle proportionally to scroll distance
+		function sizeScrollbar() {
+			var remainder = scrollContent.width() - scrollPane.width();
+			var proportion = remainder / scrollContent.width();
+			var handleSize = scrollPane.width() - ( proportion * scrollPane.width() );
+			scrollbar.find( ".ui-slider-handle" ).css({
+				width: handleSize,
+				"margin-left": -handleSize / 2
+			});
+			handleHelper.width( "" ).width( scrollbar.width() - handleSize );
+		}
+		
+		//reset slider value based on scroll content position
+		function resetValue() {
+			var remainder = scrollPane.width() - scrollContent.width();
+			var leftVal = scrollContent.css( "margin-left" ) === "auto" ? 0 :
+				parseInt( scrollContent.css( "margin-left" ) );
+			var percentage = Math.round( leftVal / remainder * 100 );
+			scrollbar.slider( "value", percentage );
+		}
+		
+		//if the slider is 100% and window gets larger, reveal content
+		function reflowContent() {
+				var showing = scrollContent.width() + parseInt( scrollContent.css( "margin-left" ), 10 );
+				var gap = scrollPane.width() - showing;
+				if ( gap > 0 ) {
+					scrollContent.css( "margin-left", parseInt( scrollContent.css( "margin-left" ), 10 ) + gap );
+				}
+		}
+		
+		//change handle position on window resize
+		$( window ).resize(function() {
+			resetValue();
+			sizeScrollbar();
+			reflowContent();
+		});
+		//init scrollbar size
+		setTimeout( sizeScrollbar, 10 );//safari wants a timeout
+		
+		RecountSlider();
+	}
+	
+	function SwitchPopItems(what){
+		if(what=='actor'){ // актёры
+			$(".headerGrayLine .right").addClass("act");
+			$(".headerGrayLine .left").removeClass("act");
+			$(".wide_films").css({display:"none"});
+			$(".wide_people").css({display:"block"});
+			$(".popular_names").css({display:"block"});
+			$(".popular_films").css({display:"none"});
+		} else { // фильмы
+			$(".headerGrayLine .left").addClass("act");
+			$(".headerGrayLine .right").removeClass("act");
+			$(".wide_people").css({display:"none"});
+			$(".wide_films").css({display:"block"});
+			$(".popular_names").css({display:"none"});
+			$(".popular_films").css({display:"block"});
+		}
+		$(".wide").css({'marginLeft':0});
+		$(".scroll-bar" ).slider("value",0);
+		return false;
+	}
+	
+	
+	$(InitSlider);
+	

@@ -1,0 +1,208 @@
+@charset "windows-1251";
+
+nobr {color: #333; white-space: normal; text-align: left !important; margin: 0; padding: 0}
+.col_one, .col_sec {font-family: arial; font-size: 12px; border-bottom: 1px #ddd dotted}
+.col_one, .col_sec, .col_one td, .col_sec td {vertical-align: top}
+.col_one {width: 215px; font-family: arial; padding: 8px 10px 8px 0}
+.col_sec .gray {color: #ccc !important}
+.col_sec .last {border: none !important}
+.col_sec b {font-weight: normal; display: block; position: relative; padding: 0 0 15px 16px}
+.col_sec i {width: 93px; color: #ffa366; font-family: tahoma, verdana; font-size: 11px; font-style: normal; text-align: right; position: absolute; top: 0; left: -90px}
+.col_sec u {background: url(/images/movies/glasses_3d.gif) 62px 3px no-repeat !important; color: #777; font-size: 11px; text-decoration: none; display: block}
+.col_sec u.imax {background: url(/images/icons/imax.gif) 0 0 no-repeat !important; width:30px; height:6px; float:right; margin-top:5px; color: #777; font-size: 11px; text-decoration: none; display: block}
+.no_bg {background: none !important}
+.col_one .name {}
+.col_one .name .add {white-space: nowrap; position: absolute; margin: 2px 0 0 5px}
+   .col_one .name .add * {cursor: pointer}
+   .col_one .name .add s {background: url(/images/icons/mycinema_add.gif?v=2) no-repeat; width: 7px; height: 7px; overflow: hidden; position: absolute; top: 3px; left: 0}
+   .col_one .name .add i {background: none repeat scroll 0 0 #FFFFFF; border-radius: 5px 5px 5px 5px; color: #009900; display: none; font-family: arial;
+   font-size: 10px;font-style: normal; margin-left: 10px; padding: 0 5px; position: relative; text-decoration: underline; z-index: 9;}
+   .col_one .name .add:hover s {background-position: 0 -8px}
+   .col_one .name .add:hover i {display: block}
+   .cinema_row:hover  .name .add s{background-position: 0 -8px}
+   .cinema_row:hover  .name .add i{display: block}
+   .col_one .name .remove s {background-position: -8px 0}
+   .col_one .name .remove:hover s {background-position: -8px -8px}
+   .cinema_row:hover  .name .remove s{background-position: -8px -8px}
+   .cinema_row:hover  .name .remove i{display: block}
+
+   .col_one .name .remove i {color: #ad1111}
+.col_one .address_1 {color: #777; font-size: 10px; line-height: 15px; display: block; margin: 10px 0 15px 0;}
+.col_one .address_2 {color: #777; font-size: 10px; line-height: 15px; display: block; position: relative; padding-left: 18px}
+.col_one .map_small {background: url(/images/icons/map_small.gif); width: 11px; height: 11px; overflow: hidden; display: block; position: absolute; top: 2px; left: 0}
+
+.no_cinema {width: 555px; border: none; border-collapse: collapse; margin-left: 20px}
+.no_cinema * {background: none !important; color: #333; font-family: arial; font-size: 12px}
+.no_cinema td {vertical-align: top; border-bottom: 1px #ddd dotted; padding-top: 8px; padding-bottom: 8px}
+.no_cinema .col_one {width: 215px !important}
+
+.where_when {border-bottom: 1px #ddd dotted; border-collapse: collapse}
+.where_when td {padding: 8px 0 10px 0}
+.colly_1 {width: 100px; padding-left: 7px !important; padding-right: 15px !important}
+   .colly_1 a {color: #f60; font-size: 11px; text-decoration: underline}
+.colly_2 {width: 210px; font-family: arial; font-size: 12px; text-align: left}
+.colly_2 span {line-height: 15px; display: block}
+
+.hp_logo {padding: 4px 0 0 15px}
+   .hp_logo a {background: url(/images/icon_hp.gif) !important; width: 30px; height: 18px; overflow: hidden; cursor: pointer; display: block}
+   .colly_1 .hp_logo {padding-left: 0}
+   .name .hp_logo {padding-top: 4px !important}
+
+.showing {font-family: arial; font-size: 12px; cursor: default; margin: 0 0 50px 20px}
+   .showing * {margin: 0; padding: 0}
+   .showing a {color: #005; text-decoration: underline}
+   .showing a:hover {color: #f60}
+
+   .showing p.day {color: #333; font-family: tahoma, verdana; font-size: 11px; border-bottom: 2px #f60 solid}
+   .showing p.day b {font-weight: bold}
+
+   .showing .title {min-height: 40px; position: relative; margin-top: 12px}
+   .showing .title div {float: left}
+   .showing .title p {width: 211px}
+   .showing .title p u.plus, .showing .title p u.minus {background: url(/images/showing_plus.gif); width: 13px; height: 11px; overflow: hidden; cursor: pointer; display: block; position: absolute; margin: 1px 0 0 -16px}
+   .showing .title p u.minus {background-position: 0 -13px}
+   .showing .title img {float: left; display: block}
+   .showing .film_info i {background: url(/images/showing_arr.gif) 0 4px no-repeat; width: 5px; height:5px;  float: left; display: block; padding: 2px 0 0 5px}
+   .showing .title b i {font-style: normal; display: block}
+   .showing .film_info  span {background: url(/images/clock_small.gif) 0 2px no-repeat; display: block; padding-left: 12px}
+   .showing .title s {height: 5px; overflow: hidden; clear: left; display: block}
+
+   .showing_links {height: 19px; color: #333; overflow: hidden; margin: 3px 0 8px 0}
+      .showing_links p {background: url(/images/showing_plus_2.gif) no-repeat; color: #333; cursor: pointer; float: right; margin: 0; padding: 2px 5px 3px 22px}
+      .showing_links p.plus, .showing_links p.plus_act {background-position: 7px 5px}
+      .showing_links p.minus, .showing_links p.minus_act {background-position: 7px -14px}
+      .showing_links p.plus_act, .showing_links p.minus_act {background-color: #ffd1b2; cursor: default}
+      .showing_links .plus:hover, .showing_links .minus:hover {color: #f60}
+
+   .showing table {width: 525px; border-collapse: collapse; position: relative; margin-left: 30px}
+      .showing_section dl {border-bottom: 1px #ccc dotted; padding:0px 10px 15px 0px;}
+      .showing_section   {vertical-align: top; padding: 8px 0; margin-top:-20px;}
+      .showing_section  .name {width: 138px; padding:10px 10px 0px 2px; position:absolute;}
+	  .showing_section  .name_link {font-weight: bold; color: #070 !important;}
+      .showing_section  .name a {color: #f60}
+      .showing_section  .hall {color: #ffa366; text-align: right; float: right; right: -40px; padding-top:15px; position:relative;}
+      .showing_section  .time {font-family: arial; font-size: 12px; word-spacing: 15px;  float: right; width: 222px; padding:15px 13px 0px 70px;}
+      .showing_section   b, .showing  i, .showing  u {float: left; display: block; padding-bottom: 2px !important}
+      .showing_section   b {background: url(/images/book/tick.gif) 0 3px no-repeat; font-weight: normal; padding: 0 6px 0 12px}
+      .showing_section   i {color: #ccc; font-style: normal; padding: 0 6px 0 12px}
+      .showing_section   u {color: #333; text-decoration: none; padding: 0 6px 0 12px}
+      .showing_section  .hall u {background: url(/images/movies/glasses_3d.gif) 10px 3px no-repeat; color: #777; font-size: 11px; display:block; width:30px;}
+	  .showing_section  .hall u.imax {background: url(/images/icons/imax.gif) 0 0 no-repeat !important; margin-right:-10px;width:30px; height:6px; float:right; margin-top:5px; color: #777; font-size: 11px; text-decoration: none; display: block}
+	  .film_info {list-style:none; width:200px; color: #777777;font-size: 10px; font-weight: normal; position:relative; top: -20px; left:320px; *left:10px; *top:0px;}
+	  .film_info_first {margin-left:-10px;}
+
+.add_myfilms {width: 85px; min-height: 68px; position: absolute; margin: 10px 0 0 -92px}
+   .add_myfilms a.add {background: url(/images/add_myfilms.gif) 0 6px no-repeat !important; width: 62px; color: #337b2c; font-size: 10px; text-decoration: underline; text-align: left; overflow: hidden; display: block; position: absolute; bottom: 0; left: -33px; padding-left: 20px}
+   .add_myfilms a.remove {background-position: 0 -83px !important; color: #777}
+   .add_myfilms i {background: url(/images/prem_clock.gif) 0 6px no-repeat; width: 100px; color: #777; font-size: 10px; font-style: normal; text-align: left; display: block; position: absolute; bottom: 40px; left: -33px; padding-left: 20px}
+   .add_myfilms i u {color: #f60; text-decoration: none; display: block}
+   .add_myfilms i u b {font-size: 9px; font-weight: normal}
+
+.info, .info * {border-collapse: collapse; margin: 0; padding: 0}
+   .info {width: 100%}
+   .info td {min-height: 14px; border-bottom: 1px #999 dotted; vertical-align: top; padding: 5px 0 6px 0}
+   .info .type {background: url(/images/sqr-grey.gif) 11px 11px no-repeat; width: 87px; color: #f60; padding-left: 23px}
+   .info a {color: #005; text-decoration: underline}
+   .info a:hover {color: #f60}
+   .info img {border: none}
+   .info img.mpaa {border: none; display: block; margin: 2px 5px 0 0}
+
+.add_cinema {position: relative}
+   .add_cinema i {background: url(/images/icons/pls-mns_medium.gif) no-repeat; font-style: normal; text-decoration: underline; cursor: pointer; display: block; position: absolute; top: 11px; right: 0; padding: 0 0 1px 19px}
+    @-moz-document url-prefix() {.add_cinema i {padding: 0 0 0px 19px;}}
+   .add_cinema .add {background-position: 0 0; color: #0e7a1b}
+   .add_cinema .remove {background-position: 0 -15px; color: #ae1212}
+
+.film_menu, .film_menu * {list-style: none; margin: 0; padding: 0}
+   .film_menu {background: #fff; height: 18px; font-size: 11px; font-weight: bold; border-top: 1px #999 solid; margin-top: 20px; padding-left: 22px}
+   .film_menu li {background: #f2f2f2; height: 16px; border-bottom: 1px #999 solid; float: left; position: relative; margin-top: -1px; padding: 2px 7px 0 6px}
+   .film_menu s {background: #fff url(/images/film_menu_bg.gif) 0 -1px no-repeat; width: 2px; height: 18px; overflow: hidden; display: block; position: absolute; top: 1px; left: -1px}
+   .film_menu u {background: #fff url(/images/film_menu_bg.gif) 0 -20px no-repeat; width: 2px; height: 18px; overflow: hidden; display: block; position: absolute; top: 1px; right: 0}
+   .film_menu b {color: #f60}
+   .film_menu a, .film_menu a:hover {color: #555}
+   .film_menu .off, .film_menu .off * {color: #999}
+   .film_menu .gray *, .film_menu .gray a:hover * {color: #999 !important; text-decoration: underline}
+   .film_menu .last a {color: #f60}
+   .film_menu .last b {color: #555}
+   .film_menu .last u {right: -1px}
+.film_menu_2 li {padding: 2px 20px 0 19px}
+
+.actor_list {background: url(/images/bg-lenta.gif) no-repeat 30px 97%; width: 260px; height: 100%; text-align: right; vertical-align: top; padding-right: 10px}
+   .actor_list a {text-decoration: underline}
+   .actor_list span {display: block; margin-bottom: 2px}
+   .actor_list span a {color: #005}
+   .actor_list span i {color: #999; font-size: 10px; font-style: normal; display: block; margin-bottom: 5px}
+   .actor_list .title {color: #f60; margin: 20px 0}
+   .actor_list .title a {color: #f60}
+
+.ical {background: #fff; width: 560px; height: 320px;  cursor: default; position: absolute; z-index: 900; padding: 20px}
+   .ical * {color: #333; font-family: arial; font-size: 12px; margin: 0; padding: 0; cursor:default;}
+   .ical img {border: none; display: block}
+   .ical p {clear: left}
+   .ical p.title {font-size: 25px; padding-bottom: 30px}
+   .ical p a {color: #007; text-decoration: underline; cursor:pointer;}
+   .ical p a:hover {text-decoration: none}
+   .ical div {height: 100px; color: #999; float: left}
+   .ical .google {width: 200px; text-indent: 7px}
+   .ical .yandex {width: 190px}
+   .ical .yandex img {margin-left: 7px}
+   .ical .outlook {width: 140px; text-indent: 35px}
+   .ical .text {background: #fff; width: 543px; color: #333; border: 1px #a5acb2 solid; display: block; margin: 10px 0; padding: 5px 8px 6px 8px}
+   .ical .button {width: 120px; color: #333; cursor: pointer; display: block; margin: 0 auto; margin-top: 25px; padding: 2px 0 3px 0}
+   .ical .close {background: url(/images/bg_close.gif); width: 11px; height: 11px; overflow: hidden; display: block; position: absolute; top: 5px; right: 5px}
+.pix * {margin: 0; padding: 0}
+
+.prem_list {}
+   .prem_list .month {font-size: 16px; font-weight: bold; border-bottom: 2px #f60 solid; margin-left: 20px; padding-top: 40px}
+.premier_item {min-height: 20px; border-bottom: 1px #ccc dotted; clear: left; position: relative; margin-left: 20px; padding: 12px 0 2px 0}
+   .premier_item .imageBlock {width: 58px; min-height: 1px; float: left; position: relative; margin: 3px 0 5px 0; padding-bottom: 9px}
+      .premier_item .imageBlock .pic {width: 52px; min-height: 1px; border: 3px #f60 solid; cursor: pointer; position: relative}
+      .premier_item .gray .pic  {border-color: #ccc !important}
+      .premier_item .imageBlock .pic img {width: 52px; display: block}
+      .premier_item .imageBlock .pic  .playTrailer {background: url(/images/posterPlayTrailer.png); width: 19px; height: 14px; overflow: hidden; position: absolute; bottom: 2px; left: 2px; cursor: pointer}
+      .premier_item .imageBlock .pic:hover .playTrailer {opacity: 0.7; filter: alpha(opacity=70)}
+      .premier_item .imageBlock .threeD {background: url(/images/icons/3dNew.gif); width: 14px; height: 13px; overflow: hidden; position: absolute; top: 0; left: -15px}
+      .premier_item .imageBlock .threeD a {width: 14px; height: 13px; overflow: hidden; display: block}
+      .premier_item .gray .threeD {left: -14px}
+      .premier_item .imageBlock .imax {text-align: center; padding-top: 6px}
+   .premier_item .text {width: 385px; float: left; padding-left: 10px}
+      .premier_item .text .textBlock {width: 281px}
+   .premier_item .lined {color: #888; text-decoration: none}
+   .premier_item .lined:hover {text-decoration: underline}
+   .premier_item .name, .premier_item .name_big {margin: 0}
+   .premier_item .name a, .premier_item .name_big a {color: #005; font-family: arial; font-size: 12px; text-decoration: underline}
+   .premier_item .name_big a {font-size: 14px}
+   .premier_item span {width: 250px; color: #888; font-family: arial; font-size: 11px; line-height: 15px; display: block; margin-bottom: 9px; padding-right: 20px}
+   .premier_item span i {font-style: normal; white-space: nowrap}
+   .premier_item .actors a {color: #888 !important}
+   .premier_item .actors a:hover {text-decoration: underline}
+   .premier_item .sinopsys {width: 393px; color: #333; text-align: justify}
+   .premier_item .ajax_rating {width: 100px; color: #777; font-size: 11px; font-family: tahoma, verdana; font-style: normal; text-align: left; display: block; position: absolute !important; top: 13px !important; left: 334px !important; padding-left: 20px}
+      .premier_item .ajax_rating s {background: url(/images/prem_clock.gif?v=1); width: 14px; height: 14px; display: block; position: absolute; top: 8px; left: 0}
+      .premier_item .ajax_rating u {color: #f60; text-decoration: none; display: block}
+      .premier_item .ajax_rating b {color: #777; font-size: 10px; font-weight: normal}
+   .premier_item .prem_day {width: 80px; font-family: tahoma; font-size: 11px; text-align: center; position: relative; float: right; padding: 60px 10px 10px 10px}
+      .premier_item .prem_day .day {width: 56px; margin: 0 auto; padding-bottom: 1px}
+      .premier_item .prem_day .day div {position: absolute; top: 1px; left: 50%; margin-left: -28px}
+      .premier_item .prem_day .company {text-decoration: none; display: block; padding-bottom: 5px}
+      .premier_item .prem_day .company a {color: #f60; text-decoration: underline}
+      .premier_item .clear {height: 1px; overflow: hidden; clear: both}
+      .premier_item .ajax {background: url(/images/ajax_star_or.gif) no-repeat; width: 16px; height: 16px; overflow: hidden; visibility: hidden; display: block; position: absolute; top: 50px; left: -34px; padding: 0}
+      .premier_item .limited {width: 82px; color: #f60; font-weight: normal; display: block; float: right}
+   .premier_item .my_mark {background: #f60; width: 23px !important; height: 18px; color: #fff; font-size: 11px; text-align: center; overflow: hidden; display: none; position: absolute; top: auto !important; top: 64px !important; left: 330px !important; z-index: 1001; margin: 0 !important; padding-top: 4px}
+   .premier_item .shortselect {width: 115px; top: 64px; left: 354px; margin: 0}
+      .premier_item .shortselect .title {height: 18px !important; padding-top: 3px !important}
+      .premier_item .shortselect .MyKP_Folder_Select_dot {top: 22px}
+
+	  .starz {height: 10px; overflow: hidden; margin-bottom: 15px}
+.starz img {float: left; display: block}
+.showDate {background: #fff; color: #333; font-family: tahoma, verdana; font-size: 17px; border-bottom: 2px #f60 solid; margin-top: 15px; padding-bottom: 2px}
+.showDate.gray {color: #777}
+.myBoardButton {position: absolute; top: 10px; left: 330px !important}
+   .myBoardButton a {background: #408c40 url(/images/myBoardButton.gif) 0 -23px; color: #ecf4ec; width: 97px; height: 19px; text-decoration: none; text-align: center; display: block; padding-top: 3px}
+   .myBoardButton.active a {background-color: #999; background-position: 0 0; color: #f5f5f5}
+.city_block {margin-top: 10px}
+.selectCountry {top: 10px; right: 413px; width:112px !important}
+.selectCity {top: 10px}
+.time_table{color: #777777; padding-left: 20px; margin-top:15px;}
+.filmsListNew .rating span {cursor:default; color:#313181;}

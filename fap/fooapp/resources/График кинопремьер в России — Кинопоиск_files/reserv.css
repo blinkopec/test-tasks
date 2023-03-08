@@ -1,0 +1,115 @@
+div.pl {
+	position:absolute;
+	width:15px;
+	height:15px;
+	background-color:#84AF68;
+	line-height:0px;
+}
+
+div.pl_num {
+	position:absolute;
+	width:15px;
+	height:15px;
+	color:#333;
+	text-align:center;
+	font-size:10px;
+	line-height:14px;
+	background-color:#FFE3D1
+}
+
+div.vip {
+	background-color:#097B00;
+}
+
+div.vip2 {
+	background-color:#5EAEAE;
+}
+
+div.buy {
+	background-color:#D80000;
+}
+
+div.bl {
+	background-color:#CCCCCC;
+}
+
+div.book {
+	background-color:#333;
+}
+
+td	{
+	font:100 11px tahoma,verdana
+}
+
+h2 {
+	padding:0px;
+	margin:0px;
+	font-weight:100;
+}
+
+h2.chapter {
+	margin:0px;
+	padding:0px;
+	color:#f60;
+	font-size:11px;
+	font-weight:bold;
+	padding-left:20px
+}
+
+#reserv_div{position:absolute;z-index:20}
+
+.popupError {background: #f2f2f2; width: 400px; font-size: 11px; border: 2px #f00 solid}
+   .popupError .top {background: #f00; height: 19px; color: #fff; position: relative; padding: 3px 10px 0 10px}
+   .popupError .top a {color: #fff; text-decoration: underline; white-space: nowrap; position: absolute; top: 2px; right: 10px; padding-right: 15px}
+   .popupError .top s {background: url(/images/book/close.gif); width: 11px; height: 11px; overflow: hidden; display: block; position: absolute; margin: 3px 0 0 47px}
+   .popupError .close {width: 85px; color: #333; cursor: pointer; display: block; margin: 10px auto}
+   .popupError #errorBlockText, .popupError .insider {color: #333; text-align: center; display: block; padding: 10px}
+   .popupError #errorBlockText b {font-weight: normal}
+.popupErrorGray {border-color: #999}
+   .popupErrorGray .top {background: #999}
+   .popupErrorGray .insider {color: #999}
+.popupErrorGray2 {border-color: #999}
+   .popupErrorGray2 .top {background: #999}
+   .popupErrorGray2 .insider {color: #333}
+
+   .hidden_seans_div { display: none !important}
+
+
+
+.selectCountry {background: url(/images/movies/select.gif) 100% 0; width: 102px; height: 21px; color: #333; font-family: arial; font-size: 11px; border: 1px #999 solid; border-top: none; border-right: none; cursor: pointer; position: absolute; top: 5px; right: 416px; z-index: 6}
+   .selectCountry * {list-style: none; margin: 0; padding: 0}
+   .selectCountry .title {background-position: 5px 6px !important; background-repeat: no-repeat !important; min-height: 1px; position: relative; padding: 4px 0 3px 26px}
+   .selectCountry .popup {position: absolute; top: 0; left: -1px; display:none;z-index:20;}
+   .selectCountry .listTitle {background: url(/images/movies/select.gif) 100% -128px; width: 101px; height: 18px; color: #fff; font-weight: bold; border-left: 1px #3b5998 solid; overflow: hidden; padding: 4px 0 0 6px}
+   .selectCountry .list {background: #fff; width: 106px; max-height: 340px; border: 1px #999 solid; border-top: none; border-bottom-width: 2px; overflow-y: auto; padding: 3px 0}
+   .selectCountry .list li {min-height: 1px; position: relative; padding: 3px 0 3px 23px}
+   .selectCountry .list li i{width:16px; height:11px; position: absolute; margin: 1px 0 0 -19px; display:block; float:left;}
+   .selectCountry .list li:hover {background: #e5e5e5}
+   .selectCountry .list .act s {background: url(/images/movies/select.gif) -270px -115px; width: 4px; height: 4px; overflow: hidden; display: inline; position: absolute; margin: 5px 0 0 -11px}
+   .selectCountry .list .sub {padding-left: 40px}
+   .selectCountry .list .act a {color: #f60}
+.selectCity {background: url(/images/movies/select.gif) 100% 0; width: 127px; height: 21px; color: #333; font-family: arial; font-size: 11px; border: 1px #999 solid; border-top: none; border-right: none; cursor: pointer; position: absolute; top: 5px; right: 275px; z-index: 19}
+   .selectCity * {list-style: none; margin: 0; padding: 0}
+   .selectCity .title {padding: 4px 0 3px 6px}
+   .selectCity .popup {position: absolute; top: 0; left: -1px; display:none;}
+   .selectCity .listTitle {background: url(/images/movies/select.gif) 100% -128px; width: 151px; height: 18px; color: #fff; font-weight: bold; border-left: 1px #3b5998 solid; overflow: hidden; padding: 4px 0 0px 6px}
+   .selectCity .list {background: #fff; width: 156px; max-height: 340px; border: 1px #999 solid; border-top: none; border-bottom-width: 2px; overflow-y: auto; padding: 3px 0}
+   .selectCity .list li {min-height: 1px; position: relative; }
+   .selectCity .list li a {min-height: 1px; position: relative; padding: 3px 0 3px 20px; display:block;}
+   .selectCity .list li:hover {background: #e5e5e5}
+   .selectCity .list li.bold a {font-weight: bold !important;}
+   .selectCity .list li a.bold {font-weight: bold !important;}
+
+   .selectCity .list  s { display:none; }
+   .selectCity .list .act s {background: url(/images/movies/select.gif) -270px -115px; width: 4px; height: 4px; overflow: hidden; display: inline; position: absolute; margin: 5px 0 0 -11px}
+   .selectCity .list .sub a {padding-left: 40px}
+   .selectCity .list .act a {color: #f60}
+
+	select.selectCitySelect {padding:2px 3px 1px 3px; width:140px; position: absolute; top: 5px; right: 275px; z-index: 3}
+	select.selectCountrySelect {padding:2px 3px 1px 3px;  width:100px; position: absolute; top: 5px; right: 426px; z-index: 3}
+
+
+
+
+
+

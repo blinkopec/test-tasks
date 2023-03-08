@@ -1,0 +1,50 @@
+@charset "windows-1251";
+
+#datepicker_star {background: url(/images/cal_news2.gif?v=1); width: 240px; height: 267px; display: block; position: relative; margin: 0 0 10px 0}
+#datepicker_star * {margin: 0; padding: 0}
+#datepicker_star p {color: #f60; font-family: tahoma, verdana; font-size: 11px; font-weight: bold; margin-bottom: 17px; padding: 16px 0 0 54px}
+#datepicker_star i {background: url(/images/loaders/white.gif) no-repeat; width: 16px; height: 16px; overflow: hidden; display: block; position: absolute; top: 132px; left: 112px}
+
+.cal_news {position: relative}
+.cal_news p {color: #f60; font-family: tahoma, verdana; font-size: 11px; font-weight: bold; position: absolute; top: 5px; left: 54px}
+#datepicker {background: url(/images/cal_news2.gif?v=1); width: 240px; height: 220px; display: none; overflow: hidden; margin: 0 0 10px 0; padding-top: 47px}
+#datepicker * {background: none; color: #333; font-family: arial; border: none; margin: 0; padding: 0}
+#datepicker table {width: 220px !important; border-collapse: collapse; margin-left: 10px}
+#datepicker table * {font-size: 12px; text-align: center !important}
+#datepicker th {border: 3px #fff solid; border-left-width: 8px; border-right-width: 8px; text-transform: lowercase; padding-bottom: 1px}
+#datepicker th.ui-datepicker-week-end * {color: #f60 !important}
+#datepicker td {border: 1px #fff solid; border-left-width: 8px; border-right-width: 8px}
+   #datepicker td * {width: 23px; height: 18px; color: #333 !important; display: block; padding-top: 3px}
+   #datepicker td a {text-decoration: underline}
+   #datepicker td a:hover {background: #f2f2f2}
+   #datepicker td span {color: #aaa !important}
+
+   #datepicker .ui-datepicker-unselectable {background: none !important}
+   #datepicker .ui-datepicker-unselectable * {font-weight: normal !important}
+   #datepicker .ui-state-disabled {filter: alpha(opacity=100); opacity: 1.0; -moz-opacity: 1.0; -khtml-opacity: 1.0}
+
+   #datepicker td.ui-datepicker-week-end span {color: #feb07d !important}
+   #datepicker td.ui-datepicker-week-end a {color: #f60 !important}
+   #datepicker td.ui-datepicker-week-end a:hover {background: #ffbd92 !important; color: #fff !important}
+   #datepicker td.ui-datepicker-today {background: #f2f2f2 !important}
+   #datepicker td.ui-datepicker-today * {font-weight: bold !important}
+
+#datepicker .ui-datepicker-header,
+#datepicker .ui-datepicker-month,
+#datepicker .ui-datepicker-calendar {width: 240px}
+#datepicker .ui-datepicker-month {font-size: 18px; font-weight: bold; text-align: center; display: block; margin-right: 19px}
+#datepicker .ui-datepicker-year {font-size: 11px; font-weight: normal; font-style: normal; display: block; margin-top: -4px}
+
+#datepicker .ui-datepicker-prev,
+#datepicker .ui-datepicker-next {background: url(/images/arrowsRight.png); width: 18px; height: 27px; cursor: pointer; overflow: hidden; position: absolute; top: 0}
+#datepicker .ui-datepicker-prev {background-position: 0 0; left: 18px}
+#datepicker .ui-datepicker-next {background-position: -19px 0; right: 18px}
+
+#datepicker td.selected a {background: #ffbd92 !important; color: #fff !important; font-weight: bold !important}
+#datepicker td.selected span {background: #007 !important; color: #fff !important; font-weight: bold !important}
+#datepicker td.ui-datepicker-today .ui-state-default {background: #f2f2f2 !important}
+#datepicker td.ui-datepicker-today a {color: #333 !important}
+#datepicker td.ui-datepicker-today span {color: #333 !important}
+#datepicker td.ui-state-disabled,
+#datepicker td.weekday,
+#datepicker td.ui-datepicker-today {background: #fff !important}

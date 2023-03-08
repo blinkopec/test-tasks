@@ -1,0 +1,9 @@
+version: "1.1"
+services:
+  app:
+    image: ${DOCKER_REGISTRY-}tz2
+    container_name: b04d87e72d806187f846933694d4c8a767b5b6df5405993c6b5c5a627fefa220
+    build:
+      context: .
+      dockerfile: ReqresAPI_GetInformation\ReqresAPI_GetInformation\Dockerfile
+      

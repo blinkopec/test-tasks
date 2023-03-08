@@ -1,0 +1,61 @@
+!function(i,t){if(i.Ya=i.Ya||{},Ya.Rum)throw new Error("Rum: interface is already defined");var n=i.performance,e=n&&n.timing&&n.timing.navigationStart||Ya.startPageLoad||+new Date,s=i.requestAnimationFrame;Ya.Rum={enabled:!!n,vsStart:document.visibilityState,vsChanged:!1,_defTimes:[],_defRes:[],_deltaMarks:{},_markListeners:{},_settings:{},_vars:{},init:function(i,t){this._settings=i,this._vars=t},getTime:n&&n.now?function(){return n.now()}:Date.now?function(){return Date.now()-e}:function(){return new Date-e},time:function(i){this._deltaMarks[i]=[this.getTime()]},timeEnd:function(i,t){var n=this._deltaMarks[i];n&&0!==n.length&&n.push(this.getTime(),t)},sendTimeMark:function(i,t,n,e){void 0===t&&(t=this.getTime()),this._defTimes.push([i,t,e]),this.mark(i,t)},sendResTiming:function(i,t){this._defRes.push([i,t])},sendRaf:function(i){var t=this.getSetting("forcePaintTimeSending");if(s&&(t||!this.isVisibilityChanged())){var n=this,e="2616."+i;s(function(){!t&&n.isVisibilityChanged()||(n.getSetting("sendFirstRaf")&&n.sendTimeMark(e+".205"),s(function(){!t&&n.isVisibilityChanged()||n.sendTimeMark(e+".1928")}))})}},isVisibilityChanged:function(){return this.vsStart&&("visible"!==this.vsStart||this.vsChanged)},mark:n&&n.mark?function(i,t){n.mark(i+(t?": "+t:""))}:function(){},getSetting:function(i){var t=this._settings[i];return null===t?null:t||""},on:function(i,t){"function"==typeof t&&(this._markListeners[i]=this._markListeners[i]||[]).push(t)},sendTrafficData:function(){},finalizeLayoutShiftScore:function(){},finalizeLargestContentfulPaint:function(){}},document.addEventListener&&document.addEventListener("visibilitychange",function i(){Ya.Rum.vsChanged=!0,document.removeEventListener("visibilitychange",i)})}(window);
+
+!function(){if(window.PerformanceLongTaskTiming){var e=function(e,n){return(e=e.concat(n)).length>300&&(e=e.slice(e.length-300)),e},n=Ya.Rum._tti={events:[],eventsAfterTTI:[],fired:!1,observer:new PerformanceObserver(function(r){var t=r.getEntries();n.events=e(n.events,t),n.fired&&(n.eventsAfterTTI=e(n.eventsAfterTTI,t))})};n.observer.observe({entryTypes:["longtask"]})}}();
+
+Ya.Rum.observeDOMNode=window.IntersectionObserver?function(e,i,n){var t=this,o=Ya.Rum.getSetting("forcePaintTimeSending");!function r(){if(o||!t.isVisibilityChanged()){var s="string"==typeof i?document.querySelector(i):i;s?new IntersectionObserver(function(i,n){!o&&t.isVisibilityChanged()||(Ya.Rum.sendTimeMark(e),n.unobserve(s))},n).observe(s):setTimeout(r,100)}}()}:function(){};
+
+!function(){var e,t=[];function n(){var n=Ya.Rum.getSetting("clck"),i=t.join("\r\n");if(t=[],e=null,n&&!(navigator.sendBeacon&&Ya.Rum.getSetting("beacon")&&navigator.sendBeacon(n,i))){var a=new XMLHttpRequest;a.open("POST",n),a.send(i)}}Ya.Rum.send=function(i,a,o,s,g,u,r){clearTimeout(e);var m=Ya.Rum.getSetting("slots"),c=Ya.Rum.getSetting("experiments"),v=["/reqid="+Ya.Rum.getSetting("reqid"),r?"/"+r.join("/"):"",a?"/path="+a:"",g?"/events="+g:"",m?"/slots="+m.join(";"):"",c?"/experiments="+c.join(";"):"",o?"/vars="+o:"","/cts="+(new Date).getTime(),"/*"];t.push(v.join("")),t.length<42?e=setTimeout(n,15):n()}}();
+
+!function(n){if(!n.Ya||!Ya.Rum)throw new Error("Rum: interface is not defined");var e=Ya.Rum;e.getSetting=function(n){var t=e._settings[n];return null===t?null:t||""}}("undefined"!=typeof self?self:window);
+
+!function(e,r){var n={client:["690.2354",1e3,100,0],uncaught:["690.2361",100,10,0],external:["690.2854",100,10,0],script:["690.2609",100,10,0]},t={};r.ERROR_LEVEL={INFO:"info",DEBUG:"debug",WARN:"warn",ERROR:"error",FATAL:"fatal"},r._errorSettings={clck:"https://yandex.ru/clck/click",beacon:!0,project:"unknown",page:"",env:"",experiments:[],additional:{},platform:"",region:"",dc:"",host:"",service:"",level:"",version:"",yandexuid:"",coordinates_gp:"",referrer:"",preventError:!1,unhandledRejection:!1,uncaughtException:!0,debug:!1,limits:{},silent:{},filters:{},pageMaxAge:864e6,initTimestamp:+new Date};var o=!1;function a(e,r){for(var n in r)r.hasOwnProperty(n)&&(e[n]=r[n]);return e}function i(e){return"boolean"==typeof e&&(e=+e),"number"==typeof e?e+"":null}r.initErrors=function(n){a(r._errorSettings,n),!o&&r._errorSettings.uncaughtException&&(function(){if(e.addEventListener)e.addEventListener("error",s),"Promise"in e&&r._errorSettings.unhandledRejection&&e.addEventListener("unhandledrejection",function(e){var r,n=e.reason,t={};n&&(n.stack&&n.message?r=n.message:"[object Event]"===(r=String(n))?r="event.type: "+n.type:"[object Object]"===r&&(t.unhandledObject=n),n.target&&n.target.src&&(t.src=n.target.src),s({message:"Unhandled rejection: "+r,stack:n.stack,additional:t}))});else{var n=e.onerror;e.onerror=function(e,r,t,o,a){s({error:a||new Error(e||"Empty error"),message:e,lineno:t,colno:o,filename:r}),n&&n.apply(this,arguments)}}}(),o=!0)},r.updateErrors=function(e){a(r._errorSettings,e)},r.updateAdditional=function(e){r._errorSettings.additional=a(r._errorSettings.additional||{},e)},r._handleError=function(e,o){var a,i,s=r._errorSettings;if(s.preventError&&e.preventDefault&&e.preventDefault(),o)a=e,i="client";else{a=r._normalizeError(e),i=a.type;var l=s.onError;"function"==typeof l&&l(a);var c=s.transform;"function"==typeof c&&(a=c(a))}var u=+new Date,d=s.initTimestamp,p=s.pageMaxAge;if(!(-1!==p&&d&&d+p<u)){var f=n[i][1];"number"==typeof s.limits[i]&&(f=s.limits[i]);var g=n[i][2];"number"==typeof s.silent[i]&&(g=s.silent[i]);var m=n[i][3];if(m<f||-1===f){a.path=n[i][0];var v=r._getErrorData(a,{silent:m<g||-1===g?"no":"yes",isCustom:Boolean(o)},s),h=function(e){t[a.message]=!1,r._sendError(e.path,e.vars),n[i][3]++}.bind(this,v);if(void 0===s.throttleSend)h();else{if(t[a.message])return;t[a.message]=!0,setTimeout(h,s.throttleSend)}}}},r._getErrorData=function(r,n,t){n=n||{};var o="";try{var s=a(a({},t.additional),r.additional);0!==Object.keys(s).length&&(o=JSON.stringify(s))}catch(r){t.debug&&e.console&&console.error("[error-counter] json.stringify:",r)}var l=t.experiments instanceof Array?t.experiments.join(";"):"",c={"-stack":r.stack,"-url":r.file,"-line":r.line,"-col":r.col,"-block":r.block,"-method":r.method,"-msg":r.message,"-env":t.env,"-external":r.external,"-externalCustom":r.externalCustom,"-project":t.project,"-service":r.service||t.service,"-page":r.page||t.page,"-platform":t.platform,"-level":r.level,"-experiments":l,"-version":t.version,"-region":t.region,"-dc":t.dc,"-host":t.host,"-yandexuid":t.yandexuid,"-coordinates_gp":r.coordinates_gp||t.coordinates_gp,"-referrer":t.referrer,"-source":r.source,"-sourceMethod":r.sourceMethod,"-type":n.isCustom?r.type:"","-additional":o,"-adb":i(Ya.blocker)||i(t.blocker),"-cdn":e.YaStaticRegion,"-ua":navigator.userAgent,"-silent":n.silent,"-ts":+new Date,"-init-ts":t.initTimestamp};return t.debug&&e.console&&console[console[r.level]?r.level:"error"]("[error-counter] "+r.message,c,r.stack),{path:r.path,vars:c}},r._baseNormalizeError=function(e){var r=(e=e||{}).filename||e.fileName||"",n=e.error&&e.error.stack||e.stack||"",t=e.message||"";return{file:r,line:e.lineno||e.lineNumber,col:e.colno||e.colNumber,stack:n,message:t,additional:e.additional}},r._normalizeError=function(e){var n=r._baseNormalizeError(e),t="uncaught",o=r._isExternalError(n.file,n.message,n.stack),a="",i="";return o.hasExternal?(t="external",a=o.common,i=o.custom):/^Script error\.?$/.test(n.message)&&(t="script"),n.external=a,n.externalCustom=i,n.type=t,n},r._sendError=function(e,n){r.send(null,e,function(e){var r=[];for(var n in e)e.hasOwnProperty(n)&&(e[n]||0===e[n])&&r.push(n+"="+encodeURIComponent(e[n]).replace(/\*/g,"%2A"));return r.join(",")}(n),null,null,null,null)};var s=function(e){r._handleError(e,!1)}}("undefined"!=typeof self?self:window,Ya.Rum);
+
+!function(e){var r={url:{0:/(miscellaneous|extension)_bindings/,1:/^chrome:/,2:/kaspersky-labs\.com\//,3:/^(?:moz|chrome)-extension:\/\//,4:/^file:/,5:/^resource:\/\//,6:/webnetc\.top/,7:/local\.adguard\.com/},message:{0:/__adgRemoveDirect/,1:/Content Security Policy/,2:/vid_mate_check/,3:/ucapi/,4:/Access is denied/i,5:/^Uncaught SecurityError/i,6:/__ybro/,7:/__show__deepen/,8:/ntp is not defined/,9:/Cannot set property 'install' of undefined/,10:/NS_ERROR/,11:/Error loading script/,12:/^TypeError: undefined is not a function$/,13:/__firefox__\.(?:favicons|metadata|reader|searchQueryForField|searchLoginField)/},stack:{0:/(?:moz|chrome)-extension:\/\//,1:/adguard.*\.user\.js/i}};function n(e,r){if(e&&r){var n=[];for(var o in r)if(r.hasOwnProperty(o)){var i=r[o];"string"==typeof i&&(i=new RegExp(i)),i instanceof RegExp&&i.test(e)&&n.push(o)}return n.join("_")}}function o(e,o){var i,t=[];for(var s in r)r.hasOwnProperty(s)&&(i=n(e[s],o[s]))&&t.push(s+"~"+i);return t.join(";")}e._isExternalError=function(n,i,t){var s=e._errorSettings.filters||{},a={url:(n||"")+"",message:(i||"")+"",stack:(t||"")+""},c=o(a,r),u=o(a,s);return{common:c,custom:u,hasExternal:!(!c&&!u)}}}(Ya.Rum);
+
+!function(){"use strict";var e;(e=Ya.Rum).logError=function(r,o){r=r||{},"string"!=typeof o&&void 0!==o||((o=new Error(o)).justCreated=!0);var a=r.message||"",s=e._baseNormalizeError(o);s.message&&(a&&(a+="; "),a+=s.message),s.message=a||"Empty error";for(var t=["service","source","type","block","additional","level","page","method","sourceMethod","coordinates_gp"],i=0;i<t.length;i++){var n=t[i];r[n]?s[n]=r[n]:o&&o[n]&&(s[n]=o[n])}e._handleError(s,!0)}}();
+
+!function(){"use strict";var t;(t=Ya.Rum).logAjaxError=function(a,i,o,n){a.type="network",a.additional=a.additional||{},"timeout"===o?a.additional.timeout=1:i.status&&(a.additional.status=i.status),t.logError(a,n)}}();
+
+if (window.KP && window.KP.rum) {
+    var rumId = window.KP.rum.id;
+    var project = window.KP.rum.project;
+    var page = window.KP.rum.page;
+    var env = window.KP.rum.env;
+    var platform = window.KP.rum.platform;
+    var version = window.KP.rum.version;
+
+    var requestId = window.KP.request_id;
+    var regionId = window.KP.regionId;
+
+    if (rumId) {
+        Ya.Rum.init({
+            beacon: !!navigator.sendBeacon,
+            clck: 'https://yandex.ru/clck/click',
+            reqid: requestId,
+            sendStaticLocation: true,
+        }, {
+            rum_id: rumId,
+            region: regionId,
+            '-project': project,
+            '-page': page,
+            '-env': env,
+            '-platform': platform,
+            '-version': version,
+            '-region': regionId,
+        });
+        Ya.Rum.observeDOMNode('2876', '.js-rum-hero');
+        Ya.Rum.initErrors({
+            project: project,
+            page: page,
+            env: env,
+            platform: platform,
+            version: version,
+            region: regionId,
+        });
+        window.KP.rumInitialized = true;
+
+        if (window.KP.initRumBundle) {
+            window.KP.initRumBundle();
+        }
+    }
+}

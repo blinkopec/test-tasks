@@ -1,0 +1,139 @@
+if (typeof(ur_data) == 'undefined') {
+    ur_data = [];
+}
+
+var miniVoteBlock = false;
+
+function AutoHideVote(film_id)
+{
+    if (typeof(AutoHideVotes) != 'undefined') {
+        $('#film_' + film_id).fadeOut();
+    }
+}
+
+function miniVote(obj, vote, user_code)
+{
+    miniVoteBlock = true;
+    var film_id=$(obj).parent(".rateNow").attr("mid");
+    request={"vote":vote,"id_film":film_id, "c": user_code};
+
+    if($(obj).parent(".rateNow").attr('vote')==vote) {
+        request.kill_vote=true;
+        request.act = 'kill_vote';
+    }
+
+    $(".show_vote_"+film_id)
+        .append('<img class="miniwitget_loader" src="https://st.kp.yandex.net/images/loaders/ajax-loader-m.gif" />');
+    $.get("/handler_vote.php",request,function(response){
+        miniVoteBlock = false;
+        $(".rateNow"+film_id+" .rateNowItem:not(.seen)").removeClass('rateNowItemAct').attr("title","поставить оценку");
+        if (response=='Ok' || response=='ok' ) {
+            var vote_div=$(".rateNow"+film_id+" .stars"+vote).parents(".rateNowItem");
+            vote_div.addClass('rateNowItemAct');
+            $(".rateNow"+film_id+"").fadeOut();
+
+            if(request.kill_vote){
+                vote_div.attr("title","поставить оценку").removeClass('rateNowItemAct');
+                vote_div.parent(".rateNow").attr('vote',false);
+                vote_div.parent(".rateNow").find(".seen").removeClass("seen_disabled").addClass("rateNowItemAct").attr("title","убрать пометку о просмотре");
+                $(".show_vote_"+film_id).removeClass("myVote").addClass("bigEye").html('');
+            } else {
+                $.app.authorityAction('MARK');
+
+                vote_div.parent(".rateNow").find(".seen").addClass("rateNowItemAct").attr("title","");
+                vote_div.attr("title","удалить оценку");
+                vote_div.parent(".rateNow").attr('vote',vote);
+                vote_div.parent(".rateNow").find(".seen").addClass("seen_disabled");
+                $(".show_vote_"+film_id).addClass("myVote").removeClass("star").removeClass("bigEye").html(vote);
+            }
+
+            AutoHideVote(film_id);
+            if (typeof(KPAmpluaFilters) !== 'undefined' && typeof(KPAmpluaFilters.actMyWatchedNum) !== 'undefined') {
+                KPAmpluaFilters.actMyWatchedNum();
+            }
+        } else if(response=='No access'){
+            alert('Для голосования необходимо заполнить дату рождения и пол в <a href="/level/78/edit_main/" class="all">профиле</a> пользователя.');
+            $('.miniwitget_loader').remove();
+        } else if(response=='Is guest'){
+            $.app.notice($.app.notices.authRequired, {"action":"голосования"});
+            $('.miniwitget_loader').remove();
+        } else if (response == 'REVIEW_EXISTS') {
+            alert('Нельзя снять пометку о просмотре, т.к. у вас есть опубликованная рецензия на этот фильм.');
+            $('.miniwitget_loader').remove();
+        } else {
+            $.app.notice($.app.notices.unavailable);
+            $('.miniwitget_loader').remove();
+        }
+    }).fail(function (xhr, status, error) {
+        return $.app.onHandlerXhrFail(xhr, status, error, function () {
+            $('.miniwitget_loader').remove();
+        });
+    });
+}
+
+function initMiniVotes()
+{
+    if (!ur_data.length) {
+        return;
+    }
+
+    var el;
+    while (el = ur_data.shift()) {
+        var rating = el.rating;
+        var film = el.film;
+        var user_code = el.user_code;
+        var html = "";
+        var vote_eye = "";
+        var obj = el.obj || $('#rating_user_'+film+', .rating_user_'+film);
+
+        if (!rating || rating === "0") {
+            if (rating === "") {
+                vote_eye = "star";
+            }
+            if (rating === "0") {
+                vote_eye = "bigEye rateNowItemAct";
+            }
+            html += '<div title="поставить оценку" class="show_vote_'+film+' '+vote_eye+'" onclick=\'$(".rateNow").hide(); VotesLock=setTimeout(function(){VotesLock=false;},300); $(this).parents(".item").find(".rateNow[mid='+film+']").fadeIn();\'></div>';
+        } else {
+            html += '<div title="поставить оценку" class="show_vote_'+film+' myVote"  onclick=\'$(".rateNow").hide(); VotesLock=setTimeout(function(){VotesLock=false;},300); $(this).parents(".item").find(".rateNow[mid='+film+']").show();\'>'+rating+'</div>';
+        }
+
+        html += '<div class="rateNow rateNow'+film+'" mid="'+film+'" vote="'+rating+'" style="display:none;">';
+
+        for (var m = 10; m > 0; m--) {
+            rating = parseInt(rating, 10);
+            html +=
+                '<div class="rateNowItem '+(rating === m ? "rateNowItemAct" : "")+'" title="'+(rating === m ? "удалить оценку" : "поставить оценку")+'" onclick="miniVote(this,'+m+', \''+ user_code +'\' )">'+
+                    '<div class="stars stars'+m+'"></div>'+
+                    '<div class="voteNum">'+m+'</div>'+
+                '</div>';
+        }
+        html += '<div class="rateNowArrow"></div></div>';
+
+        obj.html(html).attr('title', '');
+    }
+    if (typeof(KPAmpluaFilters) !== 'undefined' && typeof(KPAmpluaFilters.actMyWatchedNum) !== 'undefined') {
+        KPAmpluaFilters.actMyWatchedNum();
+    }
+}
+
+$(function(){
+    if (top.location.href.indexOf("#") >= 0) {
+        var id = parseInt(top.location.href.split("#")[1]);
+        if (id) {
+            $("#top250_place_"+id).css({"background": "#fee3d0"});
+        }
+    }
+
+    if (typeof(ur_data) == 'undefined') {
+        ur_data = [];
+    }
+
+    initMiniVotes();
+
+    $(window).unload(function(){
+        if (miniVoteBlock) {
+            original_alert("Вы покидаете страницу, не дождавшись сохранения оценки. Есть вероятность, что оценка не сохранена. Пожалуйста, вернитесь и поставьте оценку еще раз");
+        }
+    });
+});

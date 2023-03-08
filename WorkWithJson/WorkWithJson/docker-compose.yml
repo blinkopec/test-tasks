@@ -1,0 +1,8 @@
+version: "1.1"
+services:
+  app:
+    image: ${DOCKER_REGISTRY-}tz1
+    container_name: b2f682062e77c57daf694f9ccb03ca900f9ea5e2bb5cfe39e7703047d49a8d60
+    build:
+      context: .
+      dockerfile: WorkWithJson\WorkWithJson\Dockerfile

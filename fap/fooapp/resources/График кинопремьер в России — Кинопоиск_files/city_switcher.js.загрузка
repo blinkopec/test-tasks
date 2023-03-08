@@ -1,0 +1,209 @@
+
+/*
+ * Переключатель страны
+ *
+ * */
+    KPCity={
+        data:{},
+        init: function(selector, data){
+            this.data=data||{};
+            this.timer=false;
+            this.blockClose=false;
+            this.selector=selector;
+            if(typeof(this.data.selected) == "undefined"){
+                  this.data.selected = {};
+                  this.data.selected.city = 0;
+            }
+            var html='';
+            if(!this.isMobile()){
+                html+=    '<div class="selectCity">'+
+                        '    <div class="title" onclick="KPCity.buildCityList()"></div>'+
+                        '</div>';
+            } else {
+                html+=this.getCitySelect();
+            }
+
+            $(function(){
+                $(selector).html(html);
+                KPCity.setSelectedCity();
+                $('body').click(function(){
+                    if(!KPCity.blockClose){
+                        $(KPCity.selector+" .selectCountry .popup").hide('fast');
+                        $(KPCity.selector+" .selectCity .popup").hide('fast');
+                    }
+                });
+            });
+        },
+
+        getCitySelect: function(){
+            var cityList= new Array();
+            var cityListName = {};
+            var cityListAdds = {};
+            for (let key in this.data.city_data) {
+                city = this.data.city_data[key];
+                cityListName[key] = city.name;
+                cityList[city.name] = ' <option value="'+city.link+'" '+(this.data.selected.city==key ? "selected" : "")+' >'+city.name+'</option>';
+            }
+
+            for (let key in this.data.city_data) {
+                city = this.data.city_data[key];
+                if (city.region > 0) {
+                    var region_name = cityListName[city.region];
+                    if (typeof (cityListAdds[region_name]) == "undefined")
+                        cityListAdds[region_name] = {};
+                    cityListAdds[region_name][city.name] =
+                        ' <option value="' + city.link + '" ' + (this.data.selected.city == key ? "selected" : "") + ' >&nbsp; &nbsp; ' + city.name + '</option>';
+                }
+            }
+
+            for(key in cityListAdds){
+                var cityListAddsR=this.ksort(cityListAdds[key]);
+
+                for(var i in cityListAddsR){
+                    cityList[key] += cityListAddsR[i];
+                }
+
+            }
+
+            cityList=this.ksort(cityList);
+            html= '<select class="selectCitySelect" onchange="if(this.value) top.location=this.value"><option value="">выберите город...</option>';
+            for(var n in cityList)
+                html+= cityList[n];
+            html+= '</select>';
+            return html;
+        },
+
+        isMobile: function(){
+            return (navigator.userAgent.indexOf('iPad') > -1 || navigator.userAgent.indexOf('iPhone') > -1 || navigator.userAgent.indexOf('Android') > -1);
+        },
+
+        buildCityList: function(){
+            KPCity.blockClose=true;
+            clearTimeout(KPCity.timer);
+            KPCity.timer=setTimeout(function(){ KPCity.blockClose=false; },100);
+            $(this.selector+" .selectCountry .popup").hide('fast');
+            var firstcities=[];
+            firstcities['Москва'] = '1';
+            firstcities['Санкт-Петербург'] = '2';
+            firstcities['Киев'] = '3';
+            firstcities['Минск'] = '4';
+            firstcities['Нур-Султан (Астана)'] = '5';
+            var cities=[];
+            var cities_list=[];
+            var cname = 'Выберите город...';
+
+            if(typeof(this.data.city_data) == 'undefined')
+            {
+                this.data.city_data = [];
+            }
+
+            if(typeof(this.data.city_data[this.data.selected.city].name) !== 'undefined')
+            {
+                cname = this.data.city_data[this.data.selected.city].name;
+            }
+
+            var html='';
+            if( !$(this.selector + " .selectCity .popup").length )
+            {
+                cname = (cname.length > 17 ? cname.substr(0,15) + "..." : cname);
+                html=
+                '<div class="popup">'+
+                '    <div class="listTitle" onclick="$(\''+this.selector+' .selectCity .popup\').hide();">'+ cname +'</div>'+
+                '    <ul class="list">';
+            }
+
+
+
+            var city_arr = {};
+
+            for(var i in this.data.city_data) {
+                var cobj = this.data.city_data[i];
+                var fcity = firstcities[cobj.name] ? firstcities[cobj.name] : '';
+                if(fcity) {
+                    firstcities[cobj.name] = null;
+                    city_arr[fcity +    cobj.name] = this.data.city_data[i];
+                } else {
+                    city_arr[cobj.name] = this.data.city_data[i];
+                }
+            }
+            city_arr=this.ksort(city_arr);
+
+            var regions = {};
+            for(var cn in city_arr){
+                if (cn === 'undefined') {
+                    continue;
+                }
+                var cityObj=city_arr[cn];
+
+                var c=cityObj.id_city;
+                var act=(c==this.data.selected.city? "act" : "");
+                var sub=(cityObj.region>0?'sub':'');
+
+                cities[cn]='<li class="city_'+ c +' '+ act +'" onclick="KPCity.setSelectedCity('+c+')"><a href="'+cityObj.link+'" '+(cityObj.isCapital ? 'class="bold"' : '')+'><s></s>'+cityObj.name+'</a></li>'; // все города
+
+
+                if(cityObj.region>0 && typeof(this.data.city_data[cityObj.region]) != 'undefined'){
+                    var region_name=this.data.city_data[cityObj.region].name;
+
+                    regions[region_name] = regions[region_name] ? regions[region_name] : '';
+                    regions[region_name] +='<li class="city_'+ c +' '+ act +' '+ sub +'" onclick="KPCity.setSelectedCity('+c+')"><a href="'+cityObj.link+'" '+(cityObj.isCapital ? 'class="bold"' : '')+'><s></s>'+cityObj.name+'</a></li>'; // пригороды
+
+                }
+            }
+            var i=0;
+            for(var n in cities){
+                cities_list[i++]=(cities[n] ? cities[n] : '') + (regions[n]  ? regions[n] : '');
+            }
+            html+=cities_list.join('');
+
+
+            if( !$(this.selector + " .selectCity .popup").length ) {
+                html+='</ul>'+
+                '</div>';
+                $(this.selector + " .selectCity").append(html);
+            } else {
+                $(this.selector + " .selectCity .list").html(html);
+            }
+
+            $(this.selector + " .selectCity .popup").show('fast');
+            if (this.data.selected.is_change_country) {
+                $(this.selector + " .selectCity .popup ul").scrollTop('0px');
+            }
+            this.data.selected.is_change_country = false;
+        },
+
+        setSelectedCity: function(city_id){
+            if(city_id) this.data.selected.city=city_id;
+            if(this.data.selected.city){
+                var cname = this.data.city_data[this.data.selected.city].name;
+                cname = (cname.length > 17 ? cname.substr(0,15) + "..." : cname);
+
+                $(this.selector+" .selectCity .title")
+                    .html(cname);
+                $(this.selector+" .selectCity .listTitle")
+                    .html(cname);
+            } else {
+                $(this.selector+" .selectCity .title")
+                    .html("выберите город...");
+                $(this.selector+" .selectCity .listTitle")
+                    .html("выберите город...");
+            }
+            $(this.selector+" .selectCity li").removeClass('act');
+            $(this.selector+" .selectCity .city_"+this.data.selected.city).addClass('act');
+            $(this.selector+" .selectCity .popup").hide('fast');
+        },
+
+        ksort: function(w) {
+            var sArr = [], tArr = [], n = 0;
+            for (i in w){
+                tArr[n++] = i;
+            }
+            tArr = tArr.sort();
+            for (var i=0, n = tArr.length; i<n; i++) {
+                sArr[tArr[i]] = w[tArr[i]];
+            }
+            return sArr;
+        }
+
+    };
+

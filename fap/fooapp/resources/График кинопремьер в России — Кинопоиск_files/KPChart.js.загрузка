@@ -1,0 +1,320 @@
+var KPChart = (function () {
+    var defaultSettings = {
+        dataType: 'jsonp',
+        isVisible: true,
+        dataCallback: null,
+        chartClassName: 'AmCharts',
+        AmCharts: {
+            pie: {
+                labelText: '[[title]]\n[[percents]]%',
+                balloonText: '[[percents]]%\n[[description]]',
+                fontFamily: 'Arial',
+                marginBottom: 0,
+                marginTop: 0,
+                outlineColor: "#FFFFFF",
+                outlineAlpha: 0,
+                outlineThickness: 0,
+                startEffect: "bounce",
+                innerRadius: "25%",
+                startDuration: 2,
+                labelRadius: 20,
+                depth3D: 10,
+                angle: 20,
+                percentFormatter: {
+                    precision: 2,
+                    decimalSeparator: ',',
+                    thousandsSeparator: ' '
+                },
+                colors: [
+                    '#FF0000', '#BF4F00', '#FFBF00', '#BFBB00',
+                    '#B6E206', '#77E112', '#26BF25', '#008834',
+                    '#00CA83', '#00E6C7', '#00EAF9', '#00CDFB',
+                    '#0084D6', '#0035A8', '#04007B', '#4E0097',
+                    '#9700AA', '#FE00C6', '#777777', '#000000'
+                ],
+                hideLabelsPercent: 8,
+                descriptionField: "alt",
+                titleField: "title",
+                valueField: "value",
+                pulledField: 'selected',
+            },
+            column: {
+                fontFamily: 'Arial',
+                marginBottom: 0,
+                marginTop: 0,
+                startEffect: "elastic",
+                startDuration: 6,
+                startAlpha: 0.1,
+                depth3D: 8,
+                angle: 25,
+                columnWidth: 0.65,
+            },
+            line: {
+                marginBottom: 5,
+                marginTop: -5,
+                descriptionField: "alt",
+                valueField: "value",
+                zoomOutText: '',
+            },
+            legend: {
+                marginBottom: 20,
+                autoMargins: false,
+                color: '#777777',
+                markerSize: 16,
+                spacing: 3,
+                valueText: '',
+                verticalGap: 4,
+            },
+            balloon: {
+                borderThickness: 0,
+                cornerRadius: 0,
+                fillAlpha: 0.8,
+                borderAlpha: 0,
+                maxWidth: 300,
+                fillColor: '#ff6600',
+                color: '#ffffff'
+            },
+            valueAxis: {
+                axisAlpha: 0,
+                tickLength: 3,
+                labelsEnabled: false,
+                gridPosition: 'start',
+                gridCount: 10
+            },
+            categoryAxis: {
+                axisAlpha: 0,
+                tickLength: 3,
+                gridPosition: 'start',
+            },
+            scrollBar: {
+                selectedBackgroundColor: '#000077',
+                backgroundColor: '#CCCCCC',
+                scrollbarHeight: 12,
+                resizeEnabled: false,
+                hideResizeGrips: true,
+                hideScrollbarOnZoomOut: false, // HACK. See below
+                enabled: true
+            },
+            cursor: {
+                cursorColor: '#777777',
+                zoomable: false
+            },
+            valueGuide: {}
+        }
+    };
+    this.charts = {};
+
+    this.deferredInit = function (settings, callback) {
+        if (typeof settings.funcIsShowed === 'function' && !settings.funcIsShowed()) {
+            setTimeout(deferredInit, 500, settings, callback);
+        } else {
+            init(settings, callback);
+        }
+    };
+
+    this.getHandlerName = function (uri, dataType) {
+        return uri.match(/\.php/)
+            ? dataType
+                + uri.replace(/(^.*kinopoisk\.ru|random=[\d\.]+|_\=\d+|handler_?|\.php|http\:\/\/)/ig, '')
+                .replace(/[\=\/\.\&\?]/g, '_')
+            : dataType + /([^\/]+)\./.exec(uri)[1];
+    };
+
+    this.getChartName = function (uri, dataType, defaultChartName) {
+        if (dataType == 'data') {
+            return defaultChartName
+        }
+        return getHandlerName(uri, dataType);
+    };
+
+    this.loadData = function (uri, dataType, data) {
+        var chartName = getChartName(uri, dataType);
+
+        if(dataType === 'data') {
+            dataLoaded(chartName, data);
+            return;
+        }
+
+        if (dataType === 'jsonp') {
+            var jsonpResponseName = getHandlerName(uri, dataType);
+
+            window[jsonpResponseName] = function (json) {
+                KPChart.dataLoaded(chartName, json);
+            };
+
+            $.ajax({
+                url: uri,
+                crossDomain: true,
+                dataType: 'jsonp',
+                cache: false,
+                jsonpCallback: jsonpResponseName,
+            })
+        }
+
+        if (dataType === 'json') {
+            $.ajax({
+                url: uri,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    dataLoaded(chartName, data);
+                }
+            });
+        }
+    };
+
+    this.dataLoaded = function (chartName, data) {
+        if (charts[chartName] === undefined) {
+            return;
+        }
+        charts[chartName].data = data;
+        drawChart(chartName);
+    };
+
+    this.init = function (settings, callback) {
+        var chartName = getChartName(settings.dataURI, settings.dataType, settings.defaultChartName);
+        if (charts[chartName] === undefined) {
+            charts[chartName] = {
+                settings: settings,
+                data: settings.data,
+                amChart: null,
+                isDrawn: false,
+                registeredCallback: callback
+            };
+        }
+
+        loadData(settings.dataURI, settings.dataType, settings.data);
+
+        switch (settings.chartType) {
+            case 'pie':
+                var legend;
+                chart = $.extend(new AmCharts.AmPieChart(), KPChart.settings().AmCharts.pie, settings.pie);
+
+                $.extend(chart.balloon, KPChart.settings().AmCharts.balloon, settings.balloon);
+
+                if (settings.legend !== false) {
+                    legend = $.extend(new AmCharts.AmLegend(), KPChart.settings().AmCharts.legend, settings.legend);
+                    chart.addLegend(legend);
+                }
+                chart.containerId = settings.containerId;
+                charts[chartName].amChart = chart;
+                break;
+            case 'column':
+                chart = $.extend(new AmCharts.AmSerialChart(), KPChart.settings().AmCharts.column, settings.column);
+                $.extend(chart.balloon, KPChart.settings().AmCharts.balloon, settings.balloon);
+
+
+                var graph = $.extend(new AmCharts.AmGraph(), settings.graph);
+                chart.addGraph(graph);
+
+                // value
+                var valueAxis = $.extend(new AmCharts.ValueAxis(), KPChart.settings().AmCharts.valueAxis, settings.valueAxis);
+
+                // guide
+                if (settings.valueGuide) {
+                    var valueGuide = $.extend({}, new AmCharts.Guide(), KPChart.settings().AmCharts.valueGuide, settings.valueGuide);
+                    valueAxis.addGuide(valueGuide);
+                }
+                chart.addValueAxis(valueAxis);
+
+                chart.startDuration = 1;
+
+                $.extend(chart.categoryAxis, KPChart.settings().AmCharts.categoryAxis, settings.categoryAxis);
+
+                chart.containerId = settings.containerId;
+                charts[chartName].amChart = chart;
+                break;
+            case 'line':
+                chart = $.extend(new AmCharts.AmSerialChart(), KPChart.settings().AmCharts.line, settings.line);
+                chart.pathToImages = location.hostname.match(/\-dev/) ? '/images2/' : '/images/';
+                $.extend(chart.balloon, KPChart.settings().AmCharts.balloon, settings.balloon);
+
+
+                $.extend(chart.categoryAxis, KPChart.settings().AmCharts.categoryAxis, settings.categoryAxis);
+
+                var valueAxis = $.extend(new AmCharts.ValueAxis(), KPChart.settings().AmCharts.valueAxis, settings.valueAxis);
+                valueAxis.maximum = valueAxis.max + parseInt(valueAxis.max) * 0.1; // ???
+
+                // guide
+                if (settings.valueGuide) {
+                    var valueGuide = $.extend({}, new AmCharts.Guide(), KPChart.settings().AmCharts.valueGuide, settings.valueGuide);
+                    valueAxis.addGuide(valueGuide);
+                }
+
+                chart.addValueAxis(valueAxis);
+
+                var graph = $.extend(new AmCharts.AmGraph(), settings.graph);
+                chart.addGraph(graph);
+
+                if (settings.cursor) {
+                    var cursor = $.extend(new AmCharts.ChartCursor(), KPChart.settings().AmCharts.cursor, settings.cursor);
+                    chart.addChartCursor(cursor);
+                }
+
+                var scrollBar = $.extend(new AmCharts.ChartScrollbar(), KPChart.settings().AmCharts.scrollBar, settings.scrollBar);
+                if (scrollBar.enabled) {
+                    chart.addChartScrollbar(scrollBar);
+                }
+                if (hideScrollbarOnZoomOut) {
+                    hideScrollbarOnZoomOut(chart, scrollBar);
+                }
+
+                charts[chartName].amChart = chart;
+                break;
+        }
+
+        drawChart(chartName);
+    };
+
+    this.drawChart = function (chartName) {
+        chart = charts[chartName];
+        if (!chart.data || !chart.amChart) {
+            return;
+        }
+
+        if(chart.isDrawn) {
+            chart.amChart.dataProvider = chart.data;
+            chart.amChart.write(chart.settings.containerId);
+            return;
+        }
+
+        chart.amChart.dataProvider = chart.data;
+        chart.amChart.write(chart.settings.containerId);
+        chart.isDrawn = true;
+        if (typeof chart.registeredCallback === 'function') {
+            chart.registeredCallback(chart.amChart);
+        }
+    };
+
+    /**
+     * Since ChartScrollbarSettings does not (yet?) implemented
+     * (http://www.amcharts.com/docs/v.2/javascript_reference/chartscrollbarsettings)
+     * we're doing this instead of simple chart.enabled = boolProperty
+     **/
+    function hideScrollbarOnZoomOut(chart, scrollBar) {
+        chart.addListener('zoomed', function (data) {
+            if (data.endIndex - data.startIndex + 1 === chart.dataProvider.length) {
+                chart.removeChartScrollbar();
+            } else if (!chart.chartScrollbar) {
+                chart.addChartScrollbar(scrollBar);
+                chart.validateNow();
+            }
+        });
+    }
+
+    function Create(settings, callback) {
+        settings = $.extend({}, KPChart.settings(), settings);
+        if(settings.dataCallback != null) {
+            callback = settings.dataCallback;
+        }
+        deferredInit(settings, callback);
+    }
+
+    return {
+        create: Create,
+        settings: function () {
+            return defaultSettings;
+        },
+        dataLoaded: dataLoaded,
+    }
+}());

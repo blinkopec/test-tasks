@@ -1,0 +1,109 @@
+/**
+ * Попап с трейлером к фильму
+ */
+(function($){
+    //var current_mess_type;
+    var popupShare;
+
+    function in_array(val, ar)
+    {
+        for (var k = 0; k < ar.length; k++) {
+            if (ar[k] == val) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function closeMailFriend()
+    {
+        $('.popupShare').remove();
+    }
+
+    function changeSendType(type)
+    {
+        if (current_mess_type == type) {
+            return;
+        }
+
+        current_mess_type = type;
+
+        popupShare.find('#b_email').toggleClass('link', current_mess_type == 'ps');
+        popupShare.find('#b_ps').toggleClass('link', current_mess_type == 'email');
+
+        switch (type) {
+            case 'email':
+                popupShare.attr('ps_type',type);
+                popupShare.find('#ps_user_to').val('e-mail друга');
+                popupShare.find('#user_from').val('от: '+getEmailFrom());
+
+                popupShare.find('#ps_user_to_id').val('');
+
+                if (typeof(reDrawUsers) == 'function') {
+                    reDrawUsers();
+                }
+                break;
+
+            case 'ps':
+                popupShare.attr('ps_type',type);
+                popupShare.find('#ps_user_to').val('никнейм друга на Кинопоиске');
+                popupShare.find('#user_from').val('от: '+getLoginFrom());
+                break;
+        }
+    }
+
+    function sendMailFriend()
+    {
+        var user_to = current_mess_type == 'email' ? popupShare.find('#ps_user_to').val() : popupShare.find('#ps_user_to_id').val();
+        var mail_body = popupShare.find('#mail_body').val();
+
+        if (user_to == 'e-mail друга' || user_to == 'никнейм друга на Кинопоиске' || mail_body == '') {
+            alert('Заполните все поля.');
+            return false;
+        }
+
+        if (current_mess_type == 'email') {
+            var mail_reg = /^[-._a-z0-9]+@[-._a-z0-9]+\.[a-z]{2,6}$/i;
+            if (!mail_reg.test(user_to)) {
+                return false;
+            }
+        }
+
+        popupShare.find('.send').prop('disabled', true);
+
+        var sendData = {
+            user_to: user_to,
+            mail_body: mail_body,
+            mess_type: current_mess_type,
+            level_from: 16,
+            rnd: (new Date()).getTime()
+        };
+
+        $.post('/handler_send_news_to_friend.php', sendData, function(data){
+            if (data == 'user not found') {
+                alert('Пользователь '+user_to+' не обнаружен.');
+            } else if (data == 'spam') {
+                alert('Слишком много сообщений!');
+            } else {
+                if (current_mess_type == 'ps') {
+                    alert('Сообщение отправлено.');
+                } else {
+                    alert('Письмо отправлено.');
+                }
+            }
+            popupShare.find('.send').prop('disabled', false);
+            closeMailFriend();
+        });
+    }
+
+    function hideRightBanner()
+    {
+        $('#loadb_').find('div[id^="ad_ph_"]').css({'display': 'none'});
+    }
+
+    function showRightBanner()
+    {
+        $('#loadb_').find('div[id^="ad_ph_"]').css({'display': 'block'});
+    }
+})(jQuery);

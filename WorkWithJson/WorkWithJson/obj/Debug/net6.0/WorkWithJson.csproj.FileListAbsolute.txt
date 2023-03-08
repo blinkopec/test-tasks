@@ -1,0 +1,17 @@
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\WorkWithJson.exe
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\WorkWithJson.deps.json
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\WorkWithJson.runtimeconfig.json
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\WorkWithJson.dll
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\WorkWithJson.pdb
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.csproj.AssemblyReference.cache
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.GeneratedMSBuildEditorConfig.editorconfig
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.AssemblyInfoInputs.cache
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.AssemblyInfo.cs
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.csproj.CoreCompileInputs.cache
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.dll
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\refint\WorkWithJson.dll
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.pdb
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.genruntimeconfig.cache
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\ref\WorkWithJson.dll
+D:\projects2\projects\WorkWithJson\WorkWithJson\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\projects2\projects\WorkWithJson\WorkWithJson\obj\Debug\net6.0\WorkWithJson.csproj.CopyComplete
